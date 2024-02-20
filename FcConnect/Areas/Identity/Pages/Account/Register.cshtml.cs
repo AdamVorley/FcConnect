@@ -72,6 +72,10 @@ namespace FcConnect.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        /// 
+
+        public List<IdentityRole> Roles { get; set; }
+
         public class InputModel
         {
             /// <summary>
@@ -101,13 +105,23 @@ namespace FcConnect.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string Role {  get; set; }
+             
         }
 
+        public void GetUserRoles() 
+        {
+            Roles = _roleManager.Roles.ToList();
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            // retrieve roles from the database for dropdown
+            GetUserRoles();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -117,6 +131,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                string userRole = Request.Form["rolesDrop"]; // get the selected user role from the dropdown
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -124,10 +139,11 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
 
                 if (result.Succeeded)
-                {
+                {                  
+
                     _logger.LogInformation("User created a new account with password.");
 
-                    await _userManager.AddToRoleAsync(user, "Admin");
+                    await _userManager.AddToRoleAsync(user, userRole);
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -141,7 +157,10 @@ namespace FcConnect.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    return RedirectToPage("/Index");
+
+                    //TODO implement a custom registration success page here - delete below
+                  /*  if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
@@ -149,7 +168,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
-                    }
+                    }*/
                 }
                 foreach (var error in result.Errors)
                 {
@@ -158,6 +177,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            GetUserRoles(); // call get user roles again to avoid null reference error when page reloads
             return Page();
         }
 

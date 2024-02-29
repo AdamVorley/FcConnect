@@ -5,22 +5,31 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Survey</h4>
+<h5>Create a new survey</h5>
 <hr />
+<div class="row">
+    <div class="col">
+        <button id="addQuestionField" type="button" class="btn">Add Question</button>
+        <button id="removeQuestionField" type="button" class="btn">Remove Last Question</button>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Survey.Name" class="control-label"></label>
-                <input asp-for="Survey.Name" class="form-control" />
+                <label asp-for="Survey.Name" class="control-label mt-3"></label>
+                <input asp-for="Survey.Name" class="form-control mb-3" placeholder="Enter a name for the survey" />
                 <span asp-validation-for="Survey.Name" class="text-danger"></span>
+            </div>            
+            <div class="form-group" id="questionsContainer">
+                <label id="questionsLabel" style="visibility:hidden;" >Questions</label>
+                <!-- Question text fields dynamically inserted here-->
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary mt-3 mb-3" />
             </div>
+            <input type="hidden" name="hiddenQuestionFieldCount" id="hiddenQuestionFieldCount" value="0" />
         </form>
     </div>
 </div>
@@ -29,6 +38,53 @@
     <a asp-page="Index">Back to List</a>
 </div>
 
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+
+    var questionFieldsCount = 0;
+
+    // add question field button click
+    document.getElementById('addQuestionField').addEventListener('click', function () {
+        
+        // set the questions label visibile when a question is added
+        questionsLabel.style.visibility = "visible";
+
+        // generate a text field on each click
+        var fieldId = 'QuestionText' + questionFieldsCount;      
+        
+        var questionField = document.createElement('input');
+        questionField.type = 'text';
+        questionField.name = fieldId;
+        questionField.id = fieldId;
+        questionField.className = "form-control mb-3";
+        questionField.placeholder = "Question " + (questionFieldsCount + 1);
+        questionField.required = true;
+        
+
+        // Append the new field to a container div or directly to the form
+        document.getElementById('questionsContainer').appendChild(questionField);
+
+            // Increment the counter for the next field
+        questionFieldsCount += 1;
+    
+        document.getElementById('hiddenQuestionFieldCount').value = questionFieldsCount;
+
+    });
+
+    // remove question field button click
+    document.getElementById('removeQuestionField').addEventListener('click', function () {
+        const fieldToRemove = document.getElementById('QuestionText' + (questionFieldsCount - 1));
+        if (questionFieldsCount > 0) 
+        {
+            questionFieldsCount -= 1;
+        }        
+        fieldToRemove.remove();
+    });
+
+
+</script>

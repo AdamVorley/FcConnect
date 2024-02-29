@@ -14,5 +14,8 @@ namespace FcConnect.Data
         public DbSet<FcConnect.Models.SurveySubmission> SurveySubmission { get; set; } = default!;
         public DbSet<FcConnect.Models.SurveyQuestion> SurveyQuestion { get; set;} = default!;
         public DbSet<FcConnect.Models.SurveyAnswer> SurveyAnswer { get; set;} = default!;
+        public DbSet<FcConnect.Models.SurveyAnswer> SurveyUserLink { get; set; } = default!;
+
+
     }
 }

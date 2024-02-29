@@ -7,9 +7,8 @@
         public int SurveyId { get; set; }
         public string QuestionText { get; set; }
 
-        public SurveyQuestion(int id, int questionId, int surveyId, string questionText)
-        {
-            Id = id;
+        public SurveyQuestion(int questionId, int surveyId, string questionText)
+        {            
             QuestionId = questionId;
             SurveyId = surveyId;
             QuestionText = questionText;

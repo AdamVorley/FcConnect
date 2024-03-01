@@ -15,11 +15,11 @@
 </div>
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form id="questionsForm" method="post" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Survey.Name" class="control-label mt-3"></label>
-                <input asp-for="Survey.Name" class="form-control mb-3" placeholder="Enter a name for the survey" />
+                <input id="nameField" asp-for="Survey.Name" class="form-control mb-3" placeholder="Enter a name for the survey" autocomplete="off" autofocus />
                 <span asp-validation-for="Survey.Name" class="text-danger"></span>
             </div>            
             <div class="form-group" id="questionsContainer">
@@ -27,9 +27,9 @@
                 <!-- Question text fields dynamically inserted here-->
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary mt-3 mb-3" />
+                <input type="submit" value="Create" class="btn btn-primary mt-3 mb-3" id="submit" />
             </div>
-            <input type="hidden" name="hiddenQuestionFieldCount" id="hiddenQuestionFieldCount" value="0" />
+            <!-- <input type="hidden" name="hiddenQuestionFieldCount" id="hiddenQuestionFieldCount" value="0" />-->
         </form>
     </div>
 </div>
@@ -48,6 +48,20 @@
 
     var questionFieldsCount = 0;
 
+    document.getElementById("nameField").focus();
+
+
+    document.getElementById('submit').addEventListener('click', function () {
+        
+        var hiddenQuestionFieldCount = document.createElement('input');
+        hiddenQuestionFieldCount.type = 'hidden';
+        hiddenQuestionFieldCount.id = 'hiddenQuestionFieldCount';
+        hiddenQuestionFieldCount.name = 'hiddenQuestionFieldCount';
+        document.getElementById('questionsForm').appendChild(hiddenQuestionFieldCount);
+        document.getElementById('hiddenQuestionFieldCount').value = questionFieldsCount;
+
+    });
+
     // add question field button click
     document.getElementById('addQuestionField').addEventListener('click', function () {
         
@@ -64,15 +78,15 @@
         questionField.className = "form-control mb-3";
         questionField.placeholder = "Question " + (questionFieldsCount + 1);
         questionField.required = true;
+        questionField.autocomplete = "off";
         
 
         // Append the new field to a container div or directly to the form
         document.getElementById('questionsContainer').appendChild(questionField);
+        document.getElementById(fieldId).focus();
 
             // Increment the counter for the next field
-        questionFieldsCount += 1;
-    
-        document.getElementById('hiddenQuestionFieldCount').value = questionFieldsCount;
+        questionFieldsCount += 1;    
 
     });
 

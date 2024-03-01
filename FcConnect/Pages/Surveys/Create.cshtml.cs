@@ -38,13 +38,15 @@ namespace FcConnect.Pages.Surveys
             _context.Survey.Add(Survey);
             await _context.SaveChangesAsync(); 
 
-            // a working example of adding a single question through the create survey page. 
-            // now need to dynamically add a new text field through a button click to allow creation of multiple questions.
-            string test = Request.Form["QuestionField"];
-
             // get the number of questions
             var questionCount = Request.Form["hiddenQuestionFieldCount"];
             int getNumFields = int.Parse(questionCount);
+        
+            // Check the number of questions retrieved from the JS is within the limit to prevent potential tampering
+            if (getNumFields > Constants.SurveyMaxQuestions) 
+            {
+                return Page(); //TODO return error message and audit - possibly blacklist if above certain threshold.
+            }
 
             for (int i = 0; i < getNumFields; i++) 
             {
@@ -57,14 +59,7 @@ namespace FcConnect.Pages.Surveys
                 }
             }
 
-         /*   if (test != null) 
-            {
-                SurveyQuestion surveyQuestion = new SurveyQuestion(1, Survey.Id, test);
-                _context.SurveyQuestion.Add(surveyQuestion);
-            }*/
-
-
-            await _context.SaveChangesAsync(); // move this to end
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

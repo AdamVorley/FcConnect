@@ -1,4 +1,4 @@
-﻿namespace FcConnect.Models
+﻿ namespace FcConnect.Models
 {
     public class SurveyUserLink
     {

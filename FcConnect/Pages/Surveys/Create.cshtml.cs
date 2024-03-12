@@ -54,7 +54,12 @@ namespace FcConnect.Pages.Surveys
 
                 if (question != null)
                 {
-                    SurveyQuestion surveyQuestion = new SurveyQuestion(i + 1, Survey.Id, question);
+                    // SurveyQuestion surveyQuestion = new SurveyQuestion(i + 1, Survey.Id, question);
+                    SurveyQuestion surveyQuestion = new SurveyQuestion();
+                    surveyQuestion.QuestionId = i + 1;
+                    surveyQuestion.SurveyId = Survey.Id;
+                    surveyQuestion.QuestionText = question;
+
                     _context.SurveyQuestion.Add(surveyQuestion);
                 }
             }

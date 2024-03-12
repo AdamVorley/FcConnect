@@ -19,6 +19,15 @@
                 <input asp-for="Survey.Name" class="form-control" />
                 <span asp-validation-for="Survey.Name" class="text-danger"></span>
             </div>
+            @for (int i = 0; i < Model.SurveyQuestions.Count; i++)
+            {
+                <div>
+                    <label asp-for="@Model.SurveyQuestions[i].QuestionText">Question @(i + 1):</label>                 
+                    <input asp-for="@Model.SurveyQuestions[i].QuestionText" id="QuestionText_@i" name="questions[@i].QuestionText" />
+                    <input type="hidden" asp-for="@Model.SurveyQuestions[i].Id" id="QuestionText_@i" name="questions[@i].Id" />
+                </div>    
+            
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

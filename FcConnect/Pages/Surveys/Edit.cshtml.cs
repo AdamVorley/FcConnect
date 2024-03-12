@@ -22,6 +22,8 @@ namespace FcConnect.Pages.Surveys
 
         [BindProperty]
         public Survey Survey { get; set; } = default!;
+        public List<SurveyQuestion> SurveyQuestions { get; set; }
+        private List<int> originalIds;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,18 +32,25 @@ namespace FcConnect.Pages.Surveys
                 return NotFound();
             }
 
+            SurveyQuestions = await _context.SurveyQuestion.Where(s => s.SurveyId == id).ToListAsync();
+            originalIds = SurveyQuestions.Select(q => q.Id).ToList();
+
+
             var survey =  await _context.Survey.FirstOrDefaultAsync(m => m.Id == id);
             if (survey == null)
             {
                 return NotFound();
             }
+
+            
             Survey = survey;
+           
             return Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(List<SurveyQuestion> questions)
         {
             if (!ModelState.IsValid)
             {
@@ -52,6 +61,22 @@ namespace FcConnect.Pages.Surveys
 
             try
             {
+                int i = 0;
+                foreach (SurveyQuestion question in questions)
+                {
+
+                   /* if (question.Id != originalIds[i]) 
+                    {
+                        return BadRequest("Invalid operation");
+                    }*/
+
+                    SurveyQuestion existing = await _context.SurveyQuestion.FindAsync(question.Id);
+                    if (existing != null)
+                    {
+                        existing.QuestionText = question.QuestionText;
+                    }
+                }
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

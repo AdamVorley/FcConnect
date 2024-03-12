@@ -5,5 +5,8 @@
         public int Id { get; set; }
         public required string Name { get; set; }
 
+        // use navigation properties for questions:
+        //   public ICollection<SurveyQuestion> Questions { get; set; }
+
     }
 }

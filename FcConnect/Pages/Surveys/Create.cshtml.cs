@@ -25,7 +25,7 @@ namespace FcConnect.Pages.Surveys
         }
 
         [BindProperty]
-        public Survey Survey { get; set; } = default!;  
+        public Survey Survey { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -33,37 +33,37 @@ namespace FcConnect.Pages.Surveys
             if (!ModelState.IsValid)
             {
                 return Page();
-            }            
-
-            _context.Survey.Add(Survey);
-            await _context.SaveChangesAsync(); 
+            }
 
             // get the number of questions
             var questionCount = Request.Form["hiddenQuestionFieldCount"];
             int getNumFields = int.Parse(questionCount);
-        
+
             // Check the number of questions retrieved from the JS is within the limit to prevent potential tampering
-            if (getNumFields > Constants.SurveyMaxQuestions) 
+            if (getNumFields > Constants.SurveyMaxQuestions)
             {
                 return Page(); //TODO return error message and audit - possibly blacklist if above certain threshold.
             }
 
-            for (int i = 0; i < getNumFields; i++) 
+            for (int i = 0; i < getNumFields; i++)
             {
                 string question = Request.Form["QuestionText" + i];
 
                 if (question != null)
                 {
-                    // SurveyQuestion surveyQuestion = new SurveyQuestion(i + 1, Survey.Id, question);
-                    SurveyQuestion surveyQuestion = new SurveyQuestion();
-                    surveyQuestion.QuestionId = i + 1;
-                    surveyQuestion.SurveyId = Survey.Id;
-                    surveyQuestion.QuestionText = question;
 
-                    _context.SurveyQuestion.Add(surveyQuestion);
+
+                    SurveyQuestion surveyQuestion = new()
+                    {
+                        QuestionId = i + 1,
+                        QuestionText = question,
+                        Survey = Survey
+                    };
+                    Survey.Questions.Add(surveyQuestion);
                 }
             }
 
+            _context.Survey.Add(Survey);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

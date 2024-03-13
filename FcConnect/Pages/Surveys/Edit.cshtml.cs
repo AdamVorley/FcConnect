@@ -18,12 +18,11 @@ namespace FcConnect.Pages.Surveys
         public EditModel(FcConnect.Data.ApplicationDbContext context)
         {
             _context = context;
-        }
 
+        }
+            
         [BindProperty]
         public Survey Survey { get; set; } = default!;
-        public List<SurveyQuestion> SurveyQuestions { get; set; }
-        private List<int> originalIds;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,51 +31,43 @@ namespace FcConnect.Pages.Surveys
                 return NotFound();
             }
 
-            SurveyQuestions = await _context.SurveyQuestion.Where(s => s.SurveyId == id).ToListAsync();
-            originalIds = SurveyQuestions.Select(q => q.Id).ToList();
-
-
-            var survey =  await _context.Survey.FirstOrDefaultAsync(m => m.Id == id);
+            var survey =  await _context.Survey.Include(s => s.Questions).FirstOrDefaultAsync(m => m.Id == id);
             if (survey == null)
             {
                 return NotFound();
             }
-
-            
             Survey = survey;
-           
             return Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(List<SurveyQuestion> questions)
+        public async Task<IActionResult> OnPostAsync()
         {
+
+            // get the Survey instance again
+            Survey survey = await _context.Survey.Include(s => s.Questions).FirstOrDefaultAsync(m => m.Id == Survey.Id);
+
+            // loop through the questions entered on the page
+            foreach (SurveyQuestion sq in Survey.Questions) 
+            {   
+                // fetch the existing question by the Id
+                SurveyQuestion existing = await _context.SurveyQuestion.FindAsync(sq.Id);
+
+                // check that the question is not null, and that the Id is included in the original Questions list (in case Id has been manipulated by user)
+                if (existing != null && survey.Questions.Contains(existing)) 
+                {
+                    existing.QuestionText = sq.QuestionText;
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(Survey).State = EntityState.Modified;
-
             try
             {
-                int i = 0;
-                foreach (SurveyQuestion question in questions)
-                {
-
-                   /* if (question.Id != originalIds[i]) 
-                    {
-                        return BadRequest("Invalid operation");
-                    }*/
-
-                    SurveyQuestion existing = await _context.SurveyQuestion.FindAsync(question.Id);
-                    if (existing != null)
-                    {
-                        existing.QuestionText = question.QuestionText;
-                    }
-                }
-
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

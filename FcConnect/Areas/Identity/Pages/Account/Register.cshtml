@@ -4,7 +4,7 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h4>Create New User</h4>
 
 @{
     List<SelectListItem> listRoles = new List<SelectListItem>();
@@ -18,7 +18,7 @@
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
+            <h6>Add a new user to the system</h6>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="mb-3">
@@ -37,10 +37,10 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="rolesDrop">User Role:</label>
+                <label for="rolesDrop">User Role</label>
                 @Html.DropDownList("rolesDrop", listRoles, new { @class = "form-control" })
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Add User</button>
         </form>
     </div>
 </div>

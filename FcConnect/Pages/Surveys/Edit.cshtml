@@ -14,19 +14,19 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Survey.Id" />
-            <div class="form-group">
+            <div class="form-group"> 
                 <label asp-for="Survey.Name" class="control-label"></label>
                 <input asp-for="Survey.Name" class="form-control" />
                 <span asp-validation-for="Survey.Name" class="text-danger"></span>
             </div>
-            @for (int i = 0; i < Model.SurveyQuestions.Count; i++)
+            @for (int i = 0; i < Model.Survey.Questions.Count; i++)
             {
-                <div>
-                    <label asp-for="@Model.SurveyQuestions[i].QuestionText">Question @(i + 1):</label>                 
-                    <input asp-for="@Model.SurveyQuestions[i].QuestionText" id="QuestionText_@i" name="questions[@i].QuestionText" />
-                    <input type="hidden" asp-for="@Model.SurveyQuestions[i].Id" id="QuestionText_@i" name="questions[@i].Id" />
-                </div>    
-            
+                <div class="form-group">
+                    <label asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="control-label">Question @i</label>
+                    <input asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="form-control" name="Survey.Questions[@i].QuestionText" />
+                    <input asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" type="hidden" name="Survey.Questions[@i].Id" value="@Model.Survey.Questions.ElementAt(i).Id" />
+                    <span asp-validation-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="text-danger"></span>
+                </div>
             }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -37,7 +37,7 @@
 
 <div>
     <a asp-page="./Index">Back to List</a>
-</div>
+</div> 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

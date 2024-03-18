@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SurveySubmission[0].UserId)
+                @Html.DisplayNameFor(model => model.SurveySubmission[0].User.Forename)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.SurveySubmission[0].SubmittedDateTime)
@@ -29,7 +29,7 @@
 @foreach (var item in Model.SurveySubmission) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.UserId)
+                @Html.DisplayFor(modelItem => item.User.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SubmittedDateTime)

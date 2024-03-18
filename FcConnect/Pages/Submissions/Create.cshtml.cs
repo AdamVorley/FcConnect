@@ -51,9 +51,10 @@ namespace FcConnect.Pages.Submissions
             ModelState.Clear();
 
             var signedInUser = await _userManager.GetUserAsync(User);
+            User user = await _context.User.FindAsync(signedInUser.Id);
 
             SurveySubmission.SubmittedDateTime = DateTime.Now;
-            SurveySubmission.UserId = signedInUser.Id; //TODO - display user name instead of id, keep Id on database.
+            SurveySubmission.User = user; //TODO - display user name instead of id, keep Id on database.
 
             SurveyAnswer surveyAnswer = new SurveyAnswer(SurveySubmission.Id, 1, 1, "test"); // get answers from page
 

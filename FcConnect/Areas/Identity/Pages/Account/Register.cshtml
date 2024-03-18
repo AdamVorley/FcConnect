@@ -37,6 +37,17 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="mb-3">
+                <label asp-for="Input.Forename">Forename</label>
+                <input asp-for="Input.Forename" class="form-control" aria-required="true" placeholder="Forename" />
+                <span asp-validation-for="Input.Forename" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Surname">Surname</label>
+                <input asp-for="Input.Surname" class="form-control" aria-required="true" placeholder="Surname" />
+                <span asp-validation-for="Input.Surname" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
                 <label for="rolesDrop">User Role</label>
                 @Html.DropDownList("rolesDrop", listRoles, new { @class = "form-control" })
             </div>

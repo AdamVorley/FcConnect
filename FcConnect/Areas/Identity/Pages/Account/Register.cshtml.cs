@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using FcConnect.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +31,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly FcConnect.Data.ApplicationDbContext _context;
+
 
 
         public RegisterModel(
@@ -38,7 +41,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            FcConnect.Data.ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -47,6 +51,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
             _logger = logger;
             _roleManager = roleManager;
             _emailSender = emailSender;
+            _context = context;
+
         }
 
         /// <summary>
@@ -107,7 +113,13 @@ namespace FcConnect.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             public string Role {  get; set; }
-             
+            [Required(ErrorMessage = "Forename is required.")]
+            [Display(Name = "Forename")]
+            public string Forename { get; set; }
+            [Required(ErrorMessage = "Surname is required.")]
+            [Display(Name = "Surname")]
+            public string Surname { get; set; }
+
         }
 
         public void GetUserRoles() 
@@ -156,6 +168,16 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                    User newUser = new()
+                    {
+                        Id = userId,
+                        Forename = Input.Forename,
+                        Surname = Input.Surname
+                    };                    
+
+                    await _context.User.AddAsync(newUser);
+                    await _context.SaveChangesAsync();
 
                     return RedirectToPage("/Index");
 

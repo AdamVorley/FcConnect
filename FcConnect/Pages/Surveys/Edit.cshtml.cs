@@ -42,13 +42,16 @@ namespace FcConnect.Pages.Surveys
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
+            //tryUpdate
 
-            // get the Survey instance again
-            Survey survey = await _context.Survey.Include(s => s.Questions).FirstOrDefaultAsync(m => m.Id == Survey.Id);
+            // get the original Survey instance again
+            Survey survey = await _context.Survey.Include(s => s.Questions).FirstOrDefaultAsync(m => m.Id == id);
 
             // loop through the questions entered on the page
+            // Survey -> new text entered on page
+            // survey -> original for comparison
             foreach (SurveyQuestion sq in Survey.Questions) 
             {   
                 // fetch the existing question by the Id
@@ -60,6 +63,16 @@ namespace FcConnect.Pages.Surveys
                     existing.QuestionText = sq.QuestionText;
                 }
             }
+
+        /*    for (int i = 0; i < Survey.Questions.Count; i++) 
+            {
+                SurveyQuestion existing = await _context.SurveyQuestion.FindAsync(survey.Questions.ElementAt(i));
+                if (existing != null && survey.Questions.Contains(existing)) 
+                {
+                    existing.QuestionText = Survey.Questions.ElementAt(i).QuestionText;
+                }
+
+            }*/
 
             if (!ModelState.IsValid)
             {

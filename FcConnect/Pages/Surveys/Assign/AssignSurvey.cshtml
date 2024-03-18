@@ -1,0 +1,80 @@
+﻿@page
+@model FcConnect.Pages.Surveys.Assign.EditModel
+
+@{
+    ViewData["Title"] = "Assign Survey";
+
+    List<SelectListItem> listSurveys = new List<SelectListItem>();
+    if (Model.Surveys != null)
+    {        
+        foreach (var survey in Model.Surveys)
+        {
+            listSurveys.Add(new SelectListItem { Text = survey.Name.ToString(), Value = survey.Id.ToString() });
+        }
+    }
+
+    var username = Model.User.Forename + " " + Model.User.Surname;
+
+}
+
+<h4>Assign Survey</h4>
+
+<h6>Assigning to user: @username</h6>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="User.Id" />
+            <input type="hidden" asp-for="User.Forename" />
+            <input type="hidden" asp-for="User.Surname" />
+            <div>
+                <label class="mb-0"><strong>User</strong></label>
+                <p>@username</p>
+            </div>
+           
+            <div>
+                <label><strong>Currently Assigned</strong></label>
+            </div>
+            @{
+                if (Model.UserCurrentSurveys != null)
+                {
+                    for (int i = 0; i < Model.UserCurrentSurveys.Count; i++)
+                    {
+                        <p class="mb-0">@Model.UserCurrentSurveys.ElementAt(i).Name</p>
+                    }
+                }
+            }
+            <div class="mb-3">
+                <label class="mt-2" for="surveyDrop"><strong>Select Survey</strong></label>
+                @if(listSurveys.Count > 0)
+                {
+                    @Html.DropDownList("surveyDrop", listSurveys, new { @class = "form-control" })
+      
+                    <div>
+                        <label><strong>First Due Date</strong></label><br />
+                        <input required class="datepicker mb-3" type="date" name="dueDatePicker" />
+                        <span class=""></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Assign Survey" class="btn btn-primary" />
+                    </div>
+                }
+                else
+                {
+                    <p>-- All surveys have already been assigned to this user --</p>
+                }
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-secondary" asp-page="./Index">Back</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

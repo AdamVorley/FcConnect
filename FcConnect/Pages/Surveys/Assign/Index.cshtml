@@ -1,0 +1,44 @@
+﻿@page
+@model FcConnect.Pages.Surveys.Assign.IndexModel
+
+@{
+    ViewData["Title"] = "Assign Surveys";
+}
+
+<h4>Assign Surveys</h4>
+
+<p>
+    Select a user below to assign a survey     
+</p>
+<a asp-page="/Surveys/Index" class="btn btn-secondary">Back</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User[0].Forename)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User[0].Surname)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.User) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Forename)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                <a asp-page="./AssignSurvey" asp-route-id="@item.Id">Assign</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">View Surveys</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

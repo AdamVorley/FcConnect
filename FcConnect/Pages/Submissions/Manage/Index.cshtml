@@ -1,0 +1,54 @@
+﻿@page
+@model FcConnect.Pages.Submissions.Manage.IndexModel
+
+@{
+    ViewData["Title"] = "Submissions";
+}
+
+<h4>Submissions</h4>
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User Name
+            </th>
+            <th>
+                Survey Name
+            </th>
+            <th>
+                Date Submitted
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.SurveySubmission) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Survey.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubmittedDateTime)
+            </td>
+            <td>
+                    <a asp-page="./View" asp-route-id="@item.Id" class="btn btn-primary"><i class="bi bi-eye-fill"></i> View</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

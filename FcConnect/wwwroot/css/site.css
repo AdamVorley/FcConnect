@@ -18,6 +18,14 @@ html {
   min-height: 100%;
 }
 
+a.btn {
+    border-radius:25px;
+}
+
+th {
+    background-color: #e4eded !important;
+}
+
 body {
     padding-top: 60px;
     margin-bottom: 60px;
@@ -140,3 +148,4 @@ body {
 .table tbody tr:nth-child(even) {
     background-color: #f0f7f7;
 }
+

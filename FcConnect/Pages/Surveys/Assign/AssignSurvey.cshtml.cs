@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Surveys.Assign
 {
+    [Authorize(Roles = "Admin")]
+
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;

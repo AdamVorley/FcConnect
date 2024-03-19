@@ -21,27 +21,27 @@
             <h6>Add a new user to the system</h6>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="mb-3">
+            <div class="mb-1">
                 <label asp-for="Input.Email">Email</label>
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />                
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-1">
                 <label asp-for="Input.Password">Password</label>
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-1">
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-1">
                 <label asp-for="Input.Forename">Forename</label>
                 <input asp-for="Input.Forename" class="form-control" aria-required="true" placeholder="Forename" />
                 <span asp-validation-for="Input.Forename" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-1">
                 <label asp-for="Input.Surname">Surname</label>
                 <input asp-for="Input.Surname" class="form-control" aria-required="true" placeholder="Surname" />
                 <span asp-validation-for="Input.Surname" class="text-danger"></span>
@@ -51,7 +51,7 @@
                 <label for="rolesDrop">User Role</label>
                 @Html.DropDownList("rolesDrop", listRoles, new { @class = "form-control" })
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Add User</button>
+            <button id="registerSubmit" type="submit" class="btn btn-primary"><i class="bi bi-person-fill-add"></i> Create User</button>
         </form>
     </div>
 </div>

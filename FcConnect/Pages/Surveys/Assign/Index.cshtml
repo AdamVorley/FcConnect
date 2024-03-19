@@ -10,7 +10,17 @@
 <p>
     Select a user below to assign a survey     
 </p>
-<a asp-page="/Surveys/Index" class="btn btn-secondary"><i class="bi bi-box-arrow-left"></i> Back</a>
+<a asp-page="/Surveys/Index" class="btn btn-secondary mb-3"><i class="bi bi-box-arrow-left"></i> Back</a>
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:<br />
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" /> 
+            <button type="submit" value="Search" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+        </p>
+    </div>
+</form>
 
 <table class="table">
     <thead>
@@ -36,7 +46,6 @@
             <td>
                 <a asp-page="./AssignSurvey" asp-route-id="@item.Id" class="btn btn-primary" style="border-radius:25px"><i class="bi bi-person-check-fill"></i> Assign</a>
                 <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-secondary" style="border-radius:25px"><i class="bi bi-eye"></i> View Surveys</a>
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

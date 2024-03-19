@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using FcConnect.Data;
 using FcConnect.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Surveys
 {
+    [Authorize(Roles = "Admin")]
+
     public class CreateModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;

@@ -1,0 +1,51 @@
+﻿@page
+@model FcConnect.Pages.Submissions.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SurveyUserLink</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <!--    <input type="hidden" asp-for="SurveyUserLink.Id" />
+            <input type="hidden" asp-for="SurveyUserLink.SurveyId" />
+            <input type="hidden" asp-for="SurveyUserLink.DateDue" />
+            <input type="hidden" asp-for="SurveyUserLink.StatusId" />
+
+            <input type="hidden" asp-for="SurveyUserLink.User.Id" />
+            <input type="hidden" asp-for="SurveyUserLink.User.Forename" />
+                <input type="hidden" asp-for="SurveyUserLink.User.Surname" />-->
+
+            @{
+                int i = 0;
+                foreach (var question in Model.SurveyQuestions)
+                {
+                    <div class="form-group">
+                        <label class="mb-1">@question.QuestionText</label><br />
+                        <input required type="text" name="answerText@(i)" class="form-control mb-3" />
+                    </div>
+                    i++;
+                }
+            }
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./MySurveys">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

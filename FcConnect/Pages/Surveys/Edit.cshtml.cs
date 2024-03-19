@@ -64,16 +64,6 @@ namespace FcConnect.Pages.Surveys
                 }
             }
 
-        /*    for (int i = 0; i < Survey.Questions.Count; i++) 
-            {
-                SurveyQuestion existing = await _context.SurveyQuestion.FindAsync(survey.Questions.ElementAt(i));
-                if (existing != null && survey.Questions.Contains(existing)) 
-                {
-                    existing.QuestionText = Survey.Questions.ElementAt(i).QuestionText;
-                }
-
-            }*/
-
             if (!ModelState.IsValid)
             {
                 return Page();

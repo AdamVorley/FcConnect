@@ -20,7 +20,7 @@ namespace FcConnect.Pages.Submissions
         }
 
         [BindProperty]
-        public SurveySubmission SurveySubmission { get; set; } = default!;
+        public SurveyUserLink SurveyUserLink { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,15 +29,15 @@ namespace FcConnect.Pages.Submissions
                 return NotFound();
             }
 
-            var surveysubmission = await _context.SurveySubmission.FirstOrDefaultAsync(m => m.Id == id);
+            var surveyuserlink = await _context.SurveyUserLink.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (surveysubmission == null)
+            if (surveyuserlink == null)
             {
                 return NotFound();
             }
             else
             {
-                SurveySubmission = surveysubmission;
+                SurveyUserLink = surveyuserlink;
             }
             return Page();
         }
@@ -49,11 +49,11 @@ namespace FcConnect.Pages.Submissions
                 return NotFound();
             }
 
-            var surveysubmission = await _context.SurveySubmission.FindAsync(id);
-            if (surveysubmission != null)
+            var surveyuserlink = await _context.SurveyUserLink.FindAsync(id);
+            if (surveyuserlink != null)
             {
-                SurveySubmission = surveysubmission;
-                _context.SurveySubmission.Remove(SurveySubmission);
+                SurveyUserLink = surveyuserlink;
+                _context.SurveyUserLink.Remove(SurveyUserLink);
                 await _context.SaveChangesAsync();
             }
 

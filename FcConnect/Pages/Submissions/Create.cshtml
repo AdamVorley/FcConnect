@@ -4,29 +4,29 @@
 @{
     ViewData["Title"] = "Create";
 }
-<!-- Here retrieve questions from db as a list and loop through to render to screen -->
+
 <h1>Create</h1>
 
-<h4>SurveySubmission</h4>
+<h4>SurveyUserLink</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-           <!-- <div class="form-group">
-                <label asp-for="SurveySubmission.UserId" class="control-label"></label>
-                <input asp-for="SurveySubmission.UserId" class="form-control" />
-                <span asp-validation-for="SurveySubmission.UserId" class="text-danger"></span>
-            </div>-->
-           <!-- <div class="form-group">
-                <label asp-for="SurveySubmission.SubmittedDateTime" class="control-label"></label>
-                <input asp-for="SurveySubmission.SubmittedDateTime" class="form-control" />
-                <span asp-validation-for="SurveySubmission.SubmittedDateTime" class="text-danger"></span>
-             </div>-->
             <div class="form-group">
-                <label asp-for="SurveySubmission.SubmissionSurveyLinkId" class="control-label"></label>
-                <input asp-for="SurveySubmission.SubmissionSurveyLinkId" class="form-control" />
-                <span asp-validation-for="SurveySubmission.SubmissionSurveyLinkId" class="text-danger"></span>
+                <label asp-for="SurveyUserLink.SurveyId" class="control-label"></label>
+                <input asp-for="SurveyUserLink.SurveyId" class="form-control" />
+                <span asp-validation-for="SurveyUserLink.SurveyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SurveyUserLink.DateDue" class="control-label"></label>
+                <input asp-for="SurveyUserLink.DateDue" class="form-control" />
+                <span asp-validation-for="SurveyUserLink.DateDue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SurveyUserLink.StatusId" class="control-label"></label>
+                <input asp-for="SurveyUserLink.StatusId" class="form-control" />
+                <span asp-validation-for="SurveyUserLink.StatusId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

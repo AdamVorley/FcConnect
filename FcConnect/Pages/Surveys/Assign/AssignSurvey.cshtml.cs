@@ -48,9 +48,12 @@ namespace FcConnect.Pages.Surveys.Assign
             UserCurrentSurveys = new List<Survey>();
             foreach (SurveyUserLink surveyLink in user.Surveys) 
             {
-                Survey survey = await _context.Survey.FindAsync(surveyLink.SurveyId);
-                UserCurrentSurveys.Add(survey);
-                Surveys.Remove(survey);
+                if (surveyLink.StatusId == Constants.StatusSurveyOutstanding) 
+                {
+                    Survey survey = await _context.Survey.FindAsync(surveyLink.SurveyId);
+                    UserCurrentSurveys.Add(survey);
+                    Surveys.Remove(survey);
+                }
             }
 
             return Page();

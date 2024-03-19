@@ -1,0 +1,45 @@
+﻿@page
+@model FcConnect.Pages.Submissions.IndexModel
+
+@{
+    ViewData["Title"] = "My Surveys";
+}
+
+<h4>My Surveys</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Survey Name
+            </th>
+            <th>
+                Date Due
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@{int surveyNameIndex = 0; }
+@foreach (var item in Model.SurveyUserLink) {
+        <tr class="align-content-center" >
+            <td class="align-content-center">
+                @Model.SurveyNames[surveyNameIndex]
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateDue)
+            </td>
+            <td>
+                <strong class="text-danger">Outstanding</strong>
+            </td>
+            <td>
+                    <a asp-page="./SubmitSurvey" asp-route-id="@item.Id" class="btn btn-primary" style="border-radius:25px;"><i class="bi bi-clipboard2-check-fill"></i> Submit Response</a>
+            </td>
+        </tr>
+surveyNameIndex++;
+}
+    </tbody>
+</table>

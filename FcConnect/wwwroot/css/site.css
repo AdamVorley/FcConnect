@@ -33,7 +33,7 @@ body {
 }
 
 #addQuestionField {
-    border-radius: 50px;
+    border-radius: 25px;
     
     background-color: #28a745;
     color: white;
@@ -48,14 +48,14 @@ body {
    }
 
 #removeQuestionField {
-    border-radius: 50px;
+    border-radius: 25px;
     border-color: #e3949e;    
     color: #eb001e;
     cursor: pointer;
 }
 
 #removeQuestionField:hover {
-    border-radius: 50px;
+    border-radius: 25px;
     
     box-shadow: rgba(227, 148, 158, 0.5) 0px 0px 0px 1px;
    
@@ -135,4 +135,8 @@ body {
     appearance: none;
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f0f7f7;
 }

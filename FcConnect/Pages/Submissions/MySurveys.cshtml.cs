@@ -15,17 +15,19 @@ namespace FcConnect.Pages.Submissions
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-
-
-        public IndexModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public IndexModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IList<SurveyUserLink> SurveyUserLink { get;set; } = default!;
         public List<string> SurveyNames { get; set; } = default!;
+        public string SvgContent { get; private set; }
+
 
         public async Task OnGetAsync()
         {
@@ -44,6 +46,9 @@ namespace FcConnect.Pages.Submissions
                     SurveyNames.Add(survey.Name);
                 }
             }
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "caught-up.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
         }
     }
 }

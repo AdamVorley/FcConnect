@@ -1,0 +1,40 @@
+﻿@page
+@model FcConnect.Areas.Identity.Pages.Account.SuccessModel
+@{
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-4">
+            <div style="text-align:center;" class="svg-container">
+                @Html.Raw(Model.SvgContent)
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <h1><strong>User added</strong></h1>
+        </div>
+    </div>
+</div>
+<style>
+    /* CSS to make the SVG responsive */
+    .svg-container {
+        opacity: 0; /* initially set to transparent */
+        transition: opacity 1s ease-in-out; /* apply transition */
+    }
+
+        /* Adjust SVG styling if necessary */
+        .svg-container svg {
+            width: 100%;
+            height: auto;
+        }
+</style>
+
+<script>
+    // JavaScript to trigger fade-in effect after page load
+    document.addEventListener("DOMContentLoaded", function () {
+        var svgContainer = document.querySelector(".svg-container");
+        svgContainer.style.opacity = 1; // Set opacity to 1 to trigger fade-in effect
+    });
+</script>

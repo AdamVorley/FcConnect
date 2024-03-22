@@ -51,15 +51,15 @@
                 {
                     @Html.DropDownList("surveyDrop", listSurveys, new { @class = "form-control" })
       
-                    <div>
+                    <div class="mt-3">
                         <label><strong>First Due Date</strong></label><br />
-                        <input required class="datepicker mb-3" type="date" name="dueDatePicker" />
-                        <span class=""></span>
+                        <input required class="datepicker" type="date" name="dueDatePicker" />
+                        <p class="font-weight-light" style="font-weight: 250;">Due date increment:  @Constants.SurveyFrequencyDays days</p>
                     </div>
 
                     <div class="form-group">
-                        <input type="submit" value="Assign Survey" class="btn btn-primary" />
-                        <i class="bi bi-check-circle-fill"></i>
+                        <button type="submit" value="Assign Survey" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i>&nbsp; Assign Survey</button>
+                        
 
                     </div>
                 }
@@ -74,7 +74,7 @@
 </div>
 
 <div>
-    <a class="btn btn-secondary" asp-page="./Index">Back</a>
+    <a class="btn btn-secondary" asp-page="./Index"><i class="bi bi-x-circle-fill"></i>&nbsp; Cancel</a>
 </div>
 
 @section Scripts {

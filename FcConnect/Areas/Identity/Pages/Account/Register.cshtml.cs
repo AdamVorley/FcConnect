@@ -179,7 +179,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
                     await _context.User.AddAsync(newUser);
                     await _context.SaveChangesAsync();
 
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("Success");
 
                     //TODO implement a custom registration success page here - delete below
                   /*  if (_userManager.Options.SignIn.RequireConfirmedAccount)

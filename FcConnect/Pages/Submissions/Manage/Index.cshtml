@@ -3,33 +3,41 @@
 
 @{
     ViewData["Title"] = "Submissions";
+    Guid clickCheck = Guid.NewGuid();
+    HttpContext.Session.SetString("EditClick", clickCheck.ToString());
 }
 
 <h4>Submissions</h4>
 
 <form asp-page="./Index" method="get">
     <div class="form-actions no-color">
-        <p>
-            Find by name:<br />
-            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
-            <button type="submit" value="Search" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
-        </p>
+        <p>Find by name:</p><br />
+        <div class="row">
+            <div class="col-sm-12 col-md-4 mb-3">
+                <input class="form-control " type="text" name="SearchString" value="@Model.CurrentFilter" />
+            </div>
+            <div class="col-sm-12 col-md-2 mb-3">
+                <div class="d-grid gap-2 mx-auto">
+                    <button type="submit" value="Search" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="border-bottom" style="border-top-left-radius:10px;">
                 User Name
             </th>
-            <th>
+            <th class="border-bottom">
                 Survey Name
             </th>
-            <th>
+            <th class="border-bottom">
                 Date Submitted
             </th>
-            <th></th>
+            <th class="border-bottom" style="border-top-right-radius:10px;"></th>
         </tr>
     </thead>
     <tbody>
@@ -45,7 +53,7 @@
                 @Html.DisplayFor(modelItem => item.SubmittedDateTime)
             </td>
             <td>
-                    <a asp-page="./View" asp-route-id="@item.Id" class="btn btn-primary"><i class="bi bi-eye-fill"></i> View</a>
+                    <a asp-page="./View" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary"><i class="bi bi-eye-fill"></i> View</a>
             </td>
         </tr>
 }

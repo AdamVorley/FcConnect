@@ -32,12 +32,22 @@ th {
 }
 
 body {
-    padding-top: 60px;
+    padding-top: 80px;
     margin-bottom: 60px;
     height: 100%;
-    display: flex;
     flex-direction: column;
     min-height: 100vh;
+    font-family: "Nunito Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "wdth" 100, "YTLC" 500;
+}
+
+#caughtUpText {
+    font-family: "Madimi One", sans-serif !important;
+    font-weight: 400;
+    font-style: normal;
+    color: purple;
 }
 
 .nav-link:hover {
@@ -153,4 +163,7 @@ body {
 .table tbody tr:nth-child(even) {
     background-color: #f0f7f7;
 }
+
+// <uniquifier > : Use a unique and descriptive class name
+// <weight > : Use a value from 200 to 1000
 

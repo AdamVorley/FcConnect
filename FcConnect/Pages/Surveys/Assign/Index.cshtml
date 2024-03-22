@@ -10,28 +10,33 @@
 <p>
     Select a user below to assign a survey     
 </p>
-<a asp-page="/Surveys/Index" class="btn btn-secondary mb-3"><i class="bi bi-box-arrow-left"></i> Back</a>
-
-<form asp-page="./Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by name:<br />
-            <input type="text" name="SearchString" value="@Model.CurrentFilter" /> 
-            <button type="submit" value="Search" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
-        </p>
-    </div>
-</form>
+<a asp-page="/Surveys/Index" class="btn btn-secondary mb-3"><i class="bi bi-box-arrow-left"></i> Back</a>    
+    <form asp-page="./Index" method="get">
+        <div class="form-actions no-color">
+        <p>Find by name:</p><br />        
+            <div class="row">
+            <div class="col-sm-12 col-md-4 mb-3">
+                    <input class="form-control " type="text" name="SearchString" value="@Model.CurrentFilter" />
+                </div>
+            <div class="col-sm-12 col-md-2 mb-3">
+                <div class="d-grid gap-2 mx-auto">
+                    <button type="submit" value="Search" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="border-bottom" style="border-top-left-radius:10px;">
                 @Html.DisplayNameFor(model => model.User[0].Forename)
             </th>
-            <th>
+            <th class="border-bottom">
                 @Html.DisplayNameFor(model => model.User[0].Surname)
             </th>
-            <th></th>
+            <th class="border-bottom" style="border-top-right-radius:10px;"></th>
         </tr>
     </thead>
     <tbody>

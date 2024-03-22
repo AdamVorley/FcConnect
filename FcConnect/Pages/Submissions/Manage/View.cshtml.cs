@@ -24,12 +24,21 @@ namespace FcConnect.Pages.Submissions.Manage
         public SurveySubmission SurveySubmission { get; set; } = default!;
         public List<SurveyQuestion> SurveyQuestions { get; set; } = new List<SurveyQuestion>();
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, string? click)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
+            string clickGuid = HttpContext.Session.GetString("EditClick");
+
+            if (click != clickGuid) 
+            {
+                return RedirectToPage("/Index");
+            }
+
+            HttpContext.Session.Remove("EditClick");
 
             var surveysubmission =  await _context.SurveySubmission.Include(s => s.User).Include(s => s.Survey).Include(s => s.Answers).FirstOrDefaultAsync(m => m.Id == id);
             if (surveysubmission == null)

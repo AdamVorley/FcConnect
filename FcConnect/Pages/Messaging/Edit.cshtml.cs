@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 
-namespace FcConnect.Pages.Submissions.Manage
+namespace FcConnect.Pages.Messaging
 {
     public class EditModel : PageModel
     {
@@ -21,35 +21,21 @@ namespace FcConnect.Pages.Submissions.Manage
         }
 
         [BindProperty]
-        public SurveySubmission SurveySubmission { get; set; } = default!;
-        public List<SurveyQuestion> SurveyQuestions { get; set; } = new List<SurveyQuestion>();
+        public Message Message { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id, string? click)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            // check user has accessed page via button click
-            string clickGuid = HttpContext.Session.GetString("EditClick");
-
-            if (click != clickGuid) 
-            {
-                return new StatusCodeResult(403);
-            }
-
-            HttpContext.Session.Remove("EditClick");
-
-            var surveysubmission =  await _context.SurveySubmission.Include(s => s.User).Include(s => s.Survey).Include(s => s.Answers).FirstOrDefaultAsync(m => m.Id == id);
-            if (surveysubmission == null)
+            var message =  await _context.Message.FirstOrDefaultAsync(m => m.Id == id);
+            if (message == null)
             {
                 return NotFound();
             }
-            SurveySubmission = surveysubmission;
-
-            SurveyQuestions = await _context.SurveyQuestion.Where(s => s.Survey == surveysubmission.Survey).OrderBy(s => s.QuestionId).ToListAsync();
-
+            Message = message;
             return Page();
         }
 
@@ -62,7 +48,7 @@ namespace FcConnect.Pages.Submissions.Manage
                 return Page();
             }
 
-            _context.Attach(SurveySubmission).State = EntityState.Modified;
+            _context.Attach(Message).State = EntityState.Modified;
 
             try
             {
@@ -70,7 +56,7 @@ namespace FcConnect.Pages.Submissions.Manage
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SurveySubmissionExists(SurveySubmission.Id))
+                if (!MessageExists(Message.Id))
                 {
                     return NotFound();
                 }
@@ -83,9 +69,9 @@ namespace FcConnect.Pages.Submissions.Manage
             return RedirectToPage("./Index");
         }
 
-        private bool SurveySubmissionExists(int id)
+        private bool MessageExists(Guid id)
         {
-            return _context.SurveySubmission.Any(e => e.Id == id);
+            return _context.Message.Any(e => e.Id == id);
         }
     }
 }

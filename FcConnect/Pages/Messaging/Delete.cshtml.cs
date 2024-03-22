@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 
-namespace FcConnect.Pages.Surveys
+namespace FcConnect.Pages.Messaging
 {
     public class DeleteModel : PageModel
     {
@@ -20,50 +20,40 @@ namespace FcConnect.Pages.Surveys
         }
 
         [BindProperty]
-        public Survey Survey { get; set; } = default!;
+        public Message Message { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id, string? click)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            // check user has accessed page via button click
-            string clickGuid = HttpContext.Session.GetString("EditSurveyClick");
+            var message = await _context.Message.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (click != clickGuid)
-            {
-                // TODO - Log
-                return new StatusCodeResult(403);
-            }
-
-            HttpContext.Session.Remove("EditSurveyClick");
-            var survey = await _context.Survey.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (survey == null)
+            if (message == null)
             {
                 return NotFound();
             }
             else
             {
-                Survey = survey;
+                Message = message;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var survey = await _context.Survey.FindAsync(id);
-            if (survey != null)
+            var message = await _context.Message.FindAsync(id);
+            if (message != null)
             {
-                Survey = survey;
-                _context.Survey.Remove(Survey);
+                Message = message;
+                _context.Message.Remove(Message);
                 await _context.SaveChangesAsync();
             }
 

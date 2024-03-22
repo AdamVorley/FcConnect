@@ -30,12 +30,22 @@ namespace FcConnect.Pages.Surveys.Assign
         public SurveyUserLink surveyToAssign { get; set; }
 
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string id, string? click)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
+            // check user has accessed page via button click
+            string clickGuid = HttpContext.Session.GetString("AssignSurveyClick");
+
+            if (click != clickGuid)
+            {
+                return new StatusCodeResult(403);
+            }
+
+            HttpContext.Session.Remove("AssignSurveyClick");
 
             var user =  await _context.User.Include(u => u.Surveys).FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
@@ -75,13 +85,16 @@ namespace FcConnect.Pages.Surveys.Assign
 
             int surveyAssigningId = int.Parse(Request.Form["surveyDrop"]);
             DateTime dueDate = DateTime.Parse(Request.Form["dueDatePicker"] + " " + time);
-
+            DateTime endDate = DateTime.Parse(Request.Form["endDatePicker"] + " " + time);
+            int frequencyDays = int.Parse(Request.Form["frequencyDays"]);
 
             surveyToAssign = new()
             {
                 User = User,
                 SurveyId = surveyAssigningId,
                 DateDue = dueDate, //TODO - add a field to allow user to pick date
+                EndDate = endDate,
+                SurveyFrequency = frequencyDays,
                 StatusId = Constants.StatusSurveyOutstanding
             };
 

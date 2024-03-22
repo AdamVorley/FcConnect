@@ -94,17 +94,21 @@ namespace FcConnect.Pages.Submissions
                 SurveyUserLink.StatusId = Constants.StatusSurveyCompleted;
             }
 
-            // Create new SurveyUserLink
-            newSurveyUserLink = new()
+            if (SurveyUserLink.EndDate > DateTime.Now) 
             {
-                SurveyId = SurveyUserLink.SurveyId,
-                DateDue = SurveyUserLink.DateDue.AddDays(Constants.SurveyFrequencyDays),
-                StatusId = Constants.StatusSurveyOutstanding,
-                User = SurveyUserLink.User                                
-            };
+                // Create new SurveyUserLink
+                newSurveyUserLink = new()
+                {
+                    SurveyId = SurveyUserLink.SurveyId,
+                    DateDue = SurveyUserLink.DateDue.AddDays(SurveyUserLink.SurveyFrequency),
+                    EndDate = SurveyUserLink.EndDate,
+                    StatusId = Constants.StatusSurveyOutstanding,
+                    SurveyFrequency = SurveyUserLink.SurveyFrequency,
+                    User = SurveyUserLink.User
+                };
 
-            _context.SurveyUserLink.Add(newSurveyUserLink);
-
+                _context.SurveyUserLink.Add(newSurveyUserLink);
+            }
 
             _context.Attach(SurveyUserLink).State = EntityState.Modified;
 

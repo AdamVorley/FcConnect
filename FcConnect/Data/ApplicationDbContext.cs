@@ -18,6 +18,8 @@ namespace FcConnect.Data
 
         public DbSet<FcConnect.Models.User> User { get; set; } = default!;
 
+        public DbSet<FcConnect.Models.Message> Message { get; set; } = default!;
+
 
     }
 }

@@ -7,8 +7,9 @@ namespace FcConnect.Models
         public int Id { get; set; }
         public int SurveyId { get; set; }
         public DateTime DateDue { get; set; }
+        public DateTime EndDate {  get; set; }
         public int StatusId { get; set; }
-        //[ValidateNever]
+        public int SurveyFrequency { get; set; }
         public required User User { get; set; }
     }
 }

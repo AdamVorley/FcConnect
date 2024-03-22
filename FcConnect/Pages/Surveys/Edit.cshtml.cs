@@ -27,12 +27,23 @@ namespace FcConnect.Pages.Surveys
         [BindProperty]
         public Survey Survey { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, string? click)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
+            // check user has accessed page via button click
+            string clickGuid = HttpContext.Session.GetString("EditSurveyClick");
+
+            if (click != clickGuid)
+            {
+                // TODO - Log
+                return new StatusCodeResult(403);
+            }
+
+            HttpContext.Session.Remove("EditSurveyClick");
 
             var survey =  await _context.Survey.Include(s => s.Questions).FirstOrDefaultAsync(m => m.Id == id);
             if (survey == null)

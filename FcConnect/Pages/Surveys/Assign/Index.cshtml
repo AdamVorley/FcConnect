@@ -3,6 +3,8 @@
 
 @{
     ViewData["Title"] = "Assign Surveys";
+    Guid clickCheck = Guid.NewGuid();
+    HttpContext.Session.SetString("AssignSurveyClick", clickCheck.ToString());
 }
 
 <h4>Assign Surveys</h4>
@@ -49,7 +51,7 @@
                 @Html.DisplayFor(modelItem => item.Surname)
             </td>
             <td>
-                <a asp-page="./AssignSurvey" asp-route-id="@item.Id" class="btn btn-primary" style="border-radius:25px"><i class="bi bi-person-check-fill"></i> Assign</a>
+                <a asp-page="./AssignSurvey" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary" style="border-radius:25px"><i class="bi bi-person-check-fill"></i> Assign</a>
                 <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-secondary" style="border-radius:25px"><i class="bi bi-eye"></i> View Surveys</a>
             </td>
         </tr>

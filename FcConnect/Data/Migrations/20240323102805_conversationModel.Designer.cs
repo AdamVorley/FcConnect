@@ -4,6 +4,7 @@ using FcConnect.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FcConnect.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240323102805_conversationModel")]
+    partial class conversationModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -430,7 +433,7 @@ namespace FcConnect.Data.Migrations
             modelBuilder.Entity("FcConnect.Models.Message", b =>
                 {
                     b.HasOne("FcConnect.Models.Conversation", null)
-                        .WithMany("Messages")
+                        .WithMany("messages")
                         .HasForeignKey("ConversationId");
 
                     b.HasOne("FcConnect.Models.User", "Recipient")
@@ -501,7 +504,7 @@ namespace FcConnect.Data.Migrations
             modelBuilder.Entity("FcConnect.Models.User", b =>
                 {
                     b.HasOne("FcConnect.Models.Conversation", null)
-                        .WithMany("Users")
+                        .WithMany("users")
                         .HasForeignKey("ConversationId");
                 });
 
@@ -558,9 +561,9 @@ namespace FcConnect.Data.Migrations
 
             modelBuilder.Entity("FcConnect.Models.Conversation", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("messages");
 
-                    b.Navigation("Users");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("FcConnect.Models.Survey", b =>

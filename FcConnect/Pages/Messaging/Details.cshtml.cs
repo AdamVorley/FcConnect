@@ -19,23 +19,24 @@ namespace FcConnect.Pages.Messaging
             _context = context;
         }
 
-        public Message Message { get; set; } = default!;
+        public List<Message> Messages { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(string? sender, string? receiver)
         {
-            if (id == null)
+            if (sender == null || receiver == null)
             {
                 return NotFound();
             }
 
-            var message = await _context.Message.FirstOrDefaultAsync(m => m.Id == id);
+            var message = _context.Message.Where(m => m.Sender.Id == sender && m.Recipient.Id == receiver 
+            || m.Sender.Id == receiver && m.Recipient.Id == sender).Include(m => m.Sender).Include(m => m.Recipient).ToList();
             if (message == null)
             {
                 return NotFound();
             }
             else
             {
-                Message = message;
+                Messages = message;
             }
             return Page();
         }

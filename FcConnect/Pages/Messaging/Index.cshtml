@@ -8,39 +8,41 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a class="btn btn-primary" asp-page="Create"><i class="bi bi-envelope"></i> &nbsp; New Message</a>
+    <a class="btn btn-secondary" asp-page="/"><i class="bi bi-arrow-clockwise"></i> &nbsp;Refresh</a>
+
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Message[0].MessageContent)
+                From
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Message[0].DateTimeSent)
+                Received
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Message[0].IsRead)
+                Message Preview
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Message) {
+@foreach (var item in Model.Conversation) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MessageContent)
+                    @Html.DisplayFor(modelItem => item.Messages.ElementAt(0).Sender.Forename) @Html.DisplayFor(modelItem => item.Messages.ElementAt(0).Sender.Surname)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateTimeSent)
+                @{string received = item.LastMessageSent.ToString("dd/MM/yyyy HH:mm");}
+                @received
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsRead)
+            <td class="text-truncate" style="max-width:150px;">
+                @Html.DisplayFor(modelItem => item.Messages.ElementAt(0).MessageContent)
             </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            <td>                
+                <a asp-page="./Details" asp-route-convId="@item.Id" class="btn btn-primary"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> &nbsp; Delete</a>
             </td>
         </tr>
 }

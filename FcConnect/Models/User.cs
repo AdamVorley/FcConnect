@@ -11,5 +11,6 @@ namespace FcConnect.Models
         public required string Surname { get; set; }
         public ICollection<SurveyUserLink> Surveys { get; set; } = new List<SurveyUserLink>();
         public ICollection<SurveySubmission> Submissions { get; set; } = new List<SurveySubmission>();
+        public ICollection<Conversation> Conversations { get; set; } = new List<Conversation>();
     }
 }

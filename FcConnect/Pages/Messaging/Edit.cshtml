@@ -3,31 +3,50 @@
 
 @{
     ViewData["Title"] = "Edit";
+  //  string userId = Request.Query["sender"];
+
 }
 
 <h1>Edit</h1>
 
-<h4>Message</h4>
+<h4>Conversation</h4>
 <hr />
+@foreach (var message in Model.Conversation.Messages)
+{
+    if (Model.userId == message.Sender.Id.ToString())
+    {
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-success w-75" style="border-radius:40px; border-bottom-right-radius:5px; word-wrap: break-word;">
+                    <h5 class="alert-heading">@Html.DisplayFor(modelItem => message.Sender.Forename) @Html.DisplayFor(modelItem => message.Sender.Surname)</h5>
+                    <p>@Html.DisplayFor(modelItem => message.MessageContent)</p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <div class="alert alert-primary w-75" style="border-radius:40px; border-bottom-left-radius:5px; word-wrap: break-word;">
+                    <h5 class="alert-heading">@Html.DisplayFor(modelItem => message.Sender.Forename) @Html.DisplayFor(modelItem => message.Sender.Surname)</h5>
+                    <p>@Html.DisplayFor(modelItem => message.MessageContent)</p>
+                </div>
+            </div>
+        </div>
+    }
+}
+
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Message.Id" />
+            <input type="hidden" asp-for="Conversation.Id" />
+            <input type="hidden" asp-for="Conversation.LastMessageSent" class="form-control" />
+
             <div class="form-group">
-                <label asp-for="Message.MessageContent" class="control-label"></label>
-                <input asp-for="Message.MessageContent" class="form-control" />
-                <span asp-validation-for="Message.MessageContent" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Message.DateTimeSent" class="control-label"></label>
-                <input asp-for="Message.DateTimeSent" class="form-control" />
-                <span asp-validation-for="Message.DateTimeSent" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Message.IsRead" /> @Html.DisplayNameFor(model => model.Message.IsRead)
-                </label>
+                <label asp-for="NewMessageText" class="control-label"></label>
+                <input asp-for="NewMessageText" class="form-control" type="text" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -9,21 +9,71 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FcConnect.Data.Migrations
+namespace FcConnect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240312163420_relationshipChanges4")]
-    partial class relationshipChanges4
+    [Migration("20240323125233_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("FcConnect.Models.Conversation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastMessageSent")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Conversation");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTimeSent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MessageContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Message");
+                });
 
             modelBuilder.Entity("FcConnect.Models.Survey", b =>
                 {
@@ -57,13 +107,17 @@ namespace FcConnect.Data.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubmissionLinkId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SurveyId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SurveySubmissionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.HasIndex("SurveySubmissionId");
 
                     b.ToTable("SurveyAnswer");
                 });
@@ -100,17 +154,20 @@ namespace FcConnect.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("SubmissionSurveyLinkId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("SubmittedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("SurveyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("SurveySubmission");
                 });
@@ -126,19 +183,49 @@ namespace FcConnect.Data.Migrations
                     b.Property<DateTime>("DateDue")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SurveyFrequency")
                         .HasColumnType("int");
 
                     b.Property<int>("SurveyId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SurveyUserLink");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Forename")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("SurveyUserLink");
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -343,6 +430,40 @@ namespace FcConnect.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FcConnect.Models.Message", b =>
+                {
+                    b.HasOne("FcConnect.Models.Conversation", null)
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId");
+
+                    b.HasOne("FcConnect.Models.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId");
+
+                    b.HasOne("FcConnect.Models.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.SurveyAnswer", b =>
+                {
+                    b.HasOne("FcConnect.Models.Survey", "Survey")
+                        .WithMany()
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FcConnect.Models.SurveySubmission", null)
+                        .WithMany("Answers")
+                        .HasForeignKey("SurveySubmissionId");
+
+                    b.Navigation("Survey");
+                });
+
             modelBuilder.Entity("FcConnect.Models.SurveyQuestion", b =>
                 {
                     b.HasOne("FcConnect.Models.Survey", "Survey")
@@ -352,6 +473,39 @@ namespace FcConnect.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Survey");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.SurveySubmission", b =>
+                {
+                    b.HasOne("FcConnect.Models.Survey", "Survey")
+                        .WithMany()
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FcConnect.Models.User", "User")
+                        .WithMany("Submissions")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Survey");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.SurveyUserLink", b =>
+                {
+                    b.HasOne("FcConnect.Models.User", "User")
+                        .WithMany("Surveys")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.User", b =>
+                {
+                    b.HasOne("FcConnect.Models.Conversation", null)
+                        .WithMany("Users")
+                        .HasForeignKey("ConversationId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -405,9 +559,28 @@ namespace FcConnect.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FcConnect.Models.Conversation", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("FcConnect.Models.Survey", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.SurveySubmission", b =>
+                {
+                    b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("FcConnect.Models.User", b =>
+                {
+                    b.Navigation("Submissions");
+
+                    b.Navigation("Surveys");
                 });
 #pragma warning restore 612, 618
         }

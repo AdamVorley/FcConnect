@@ -8,34 +8,44 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Cryptography.Pkcs;
 
 namespace FcConnect.Pages.Messaging
 {
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [BindProperty]
-        public Message Message { get; set; } = default!;
+        public Conversation Conversation { get; set; } = default!;
+        public string userId;
+        [BindProperty]
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public string NewMessageText { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(Guid? id, string? user)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var message =  await _context.Message.FirstOrDefaultAsync(m => m.Id == id);
-            if (message == null)
+            userId = user;
+
+            var conversation =  await _context.Conversation.Include(c => c.Users).Include(c => c.Messages).FirstOrDefaultAsync(m => m.Id == id);
+            if (conversation == null)
             {
                 return NotFound();
             }
-            Message = message;
+            Conversation = conversation;
             return Page();
         }
 
@@ -48,7 +58,38 @@ namespace FcConnect.Pages.Messaging
                 return Page();
             }
 
-            _context.Attach(Message).State = EntityState.Modified;
+            var conversation = await _context.Conversation.Include(c => c.Messages).Include(c => c.Users).FirstOrDefaultAsync(c => c.Id == Conversation.Id);
+                
+            var identityUser = await _userManager.GetUserAsync(User);
+
+
+            User sender = await _context.User.FirstOrDefaultAsync(u => u.Id == identityUser.Id);
+            User recipient = null;
+
+            foreach (var user in conversation.Users) 
+            {
+                if (user != sender) 
+                {
+                    recipient = user;
+                }
+            }
+
+            // update conversation
+            conversation.LastMessageSent = DateTime.Now;
+
+            // new Message - add to conversation
+            Message newMessage = new()
+            {
+                MessageContent = NewMessageText,
+                Sender = sender,
+                Recipient = recipient,
+                DateTimeSent = DateTime.Now,
+                IsRead = false
+            };
+
+            conversation.Messages.Add(newMessage);
+
+           // _context.Attach(Conversation).State = EntityState.Modified;
 
             try
             {
@@ -56,7 +97,7 @@ namespace FcConnect.Pages.Messaging
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MessageExists(Message.Id))
+                if (!ConversationExists(Conversation.Id))
                 {
                     return NotFound();
                 }
@@ -65,13 +106,14 @@ namespace FcConnect.Pages.Messaging
                     throw;
                 }
             }
+            return RedirectToPage("/Edit", new { id = conversation.Id }); 
 
-            return RedirectToPage("./Index");
+            // return RedirectToPage("./Edit");
         }
 
-        private bool MessageExists(Guid id)
+        private bool ConversationExists(Guid id)
         {
-            return _context.Message.Any(e => e.Id == id);
+            return _context.Conversation.Any(e => e.Id == id);
         }
     }
 }

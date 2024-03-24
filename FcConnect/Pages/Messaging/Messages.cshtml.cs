@@ -24,13 +24,16 @@ namespace FcConnect.Pages.Messaging
 
         public IList<Message> Message { get;set; } = default!;
         public IList<Conversation> Conversation { get; set; }
+        public string userId;
 
         public async Task OnGetAsync()
         {
             var identityUser = await _userManager.GetUserAsync(User);
             var user = _context.User.Find(identityUser.Id);
 
-            Conversation = await _context.Conversation.Where(c => c.Users.Contains(user)).OrderByDescending(c => c.LastMessageSent)
+            userId = user.Id.ToString();
+
+            Conversation = await _context.Conversation.Where(c => c.Users.Contains(user) && c.Messages.Any(m => m.Recipient == user)).OrderByDescending(c => c.LastMessageSent)
                 .Include(c => c.Messages).Include(c => c.Users).ToListAsync();
 
             //Conversation = await _context.Conversation.Include(c => c.Users).ToListAsync();

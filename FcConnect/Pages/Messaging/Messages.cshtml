@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    int index = 0; 
 }
 
 <h1>Index</h1>
@@ -29,22 +30,31 @@
     </thead>
     <tbody>
 @foreach (var item in Model.Conversation) {
-        <tr>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Messages.ElementAt(0).Sender.Forename) @Html.DisplayFor(modelItem => item.Messages.ElementAt(0).Sender.Surname)
-            </td>
-            <td>
-                @{string received = item.LastMessageSent.ToString("dd/MM/yyyy HH:mm");}
-                @received
-            </td>
-            <td class="text-truncate" style="max-width:150px;">
-                @Html.DisplayFor(modelItem => item.Messages.ElementAt(0).MessageContent)
-            </td>
-            <td>                
-                <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-primary"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
-                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> &nbsp; Delete</a>
-            </td>
-        </tr>
+ 
+    @for (int i = item.Messages.Count - 1; i > 0; i--)
+    {
+        if (item.Messages.ElementAt(i).Recipient.Id == Model.userId)
+        {
+            index = i;
+            break; 
+        }
+    }
+    <tr>
+        <td>
+                @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Forename) @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Surname)
+        </td>
+        <td>
+            @{string received = item.Messages.ElementAt(index).DateTimeSent.ToString("dd/MM/yyyy HH:mm");}
+            @received
+        </td>
+        <td class="text-truncate" style="max-width:150px;">
+            @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).MessageContent)
+        </td>
+        <td>                
+            <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-primary"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
+            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> &nbsp; Delete</a>
+        </td>
+    </tr>
 }
     </tbody>
 </table>

@@ -10,6 +10,7 @@ using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography.Pkcs;
+using System.ComponentModel.DataAnnotations;
 
 namespace FcConnect.Pages.Messaging
 {
@@ -28,7 +29,7 @@ namespace FcConnect.Pages.Messaging
         public Conversation Conversation { get; set; } = default!;
         public string userId;
         [BindProperty]
-
+        [Required(ErrorMessage = "Please enter a message")]
         public string NewMessageText { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id, string? user)
@@ -38,9 +39,20 @@ namespace FcConnect.Pages.Messaging
                 return NotFound();
             }
 
+            HttpContext.Session.SetString("ConversationId", id.ToString());
+
             userId = user;
 
             var conversation =  await _context.Conversation.Include(c => c.Users).Include(c => c.Messages).FirstOrDefaultAsync(m => m.Id == id);
+
+            /*
+             var messages = dbContext.Conversations
+    .Where(c => c.Id == conversationId) // Assuming you have a condition for the conversation ID
+    .SelectMany(c => c.Messages) // Assuming Messages is a collection navigation property in Conversations
+    .OrderByDescending(m => m.DateTime) // Sorting by Message.DateTime in descending order
+    .ToList();
+             */
+
             if (conversation == null)
             {
                 return NotFound();
@@ -58,8 +70,21 @@ namespace FcConnect.Pages.Messaging
                 return Page();
             }
 
+            if (Conversation.Id.ToString() != HttpContext.Session.GetString("ConversationId"))
+            {
+                return new StatusCodeResult(400);
+                // TODO - log
+            }
+
             var conversation = await _context.Conversation.Include(c => c.Messages).Include(c => c.Users).FirstOrDefaultAsync(c => c.Id == Conversation.Id);
-                
+
+            if (conversation == null) 
+            {
+                // 500
+                return new StatusCodeResult(500); 
+            }
+
+
             var identityUser = await _userManager.GetUserAsync(User);
 
 
@@ -106,9 +131,11 @@ namespace FcConnect.Pages.Messaging
                     throw;
                 }
             }
-            return RedirectToPage("/Edit", new { id = conversation.Id }); 
+            //return RedirectToPage("/Edit", new { id = conversation.Id }); 
 
-            // return RedirectToPage("./Edit");
+            //  return RedirectToPage("./Messages");
+            return new JsonResult(new { success = true });
+
         }
 
         private bool ConversationExists(Guid id)

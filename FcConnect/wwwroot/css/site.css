@@ -26,6 +26,15 @@ button {
     border-radius: 25px !important;
 }
 
+#sendButton {
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+}
+
+#messageTextField {
+    border-bottom-left-radius: 25px !important;
+    border-top-left-radius: 25px !important;
+}
 
 th {
     background-color: #e4eded !important;

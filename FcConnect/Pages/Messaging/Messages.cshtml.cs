@@ -35,8 +35,7 @@ namespace FcConnect.Pages.Messaging
 
             Conversation = await _context.Conversation.Where(c => c.Users.Contains(user) && c.Messages.Any(m => m.Recipient == user)).OrderByDescending(c => c.LastMessageSent)
                 .Include(c => c.Messages).Include(c => c.Users).ToListAsync();
-
-            //Conversation = await _context.Conversation.Include(c => c.Users).ToListAsync();
+      
 
             Message = await _context.Message.Where(m => m.Recipient == user).OrderByDescending(m => m.DateTimeSent).ToListAsync();
         }

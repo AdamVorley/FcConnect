@@ -16,17 +16,24 @@ namespace FcConnect.Pages.Surveys
     public class IndexModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public IndexModel(FcConnect.Data.ApplicationDbContext context)
+        public IndexModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IList<Survey> Survey { get;set; } = default!;
+        public string SvgContent { get; private set; }
+
 
         public async Task OnGetAsync()
         {
             Survey = await _context.Survey.ToListAsync();
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "survey.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
         }
     }
 }

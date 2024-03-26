@@ -9,33 +9,64 @@
 
 <h4>Survey Management</h4>
 
-<p>
+
     <a style="display: inline-block; vertical-align: middle;" class="btn btn-primary text-center" asp-page="Create"><i class="bi bi-plus-circle"></i> Create New</a>
     <a class="btn btn-secondary" asp-page="Assign/Index"><i class="bi bi-person-fill-add"></i> Assign Survey</a>
 
-
-
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th class="border-bottom" style="border-top-left-radius:10px;">
-                @Html.DisplayNameFor(model => model.Survey[0].Name)
-            </th>
-            <th class="border-bottom" style="border-top-right-radius:10px;"></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Survey) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary" style="border-radius: 20px;"><i class="bi bi-pencil-square"></i> View & Edit</a>
-                    <a asp-page="./Delete" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-danger" style="border-radius: 20px;"><i class="bi bi-trash3-fill"></i> Delete</a>
-            </td>
-        </tr>
+@if (Model.Survey.Count > 0)
+{    
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th class="border-bottom" style="border-top-left-radius:10px;">
+                    @Html.DisplayNameFor(model => model.Survey[0].Name)
+                </th>
+                <th class="border-bottom" style="border-top-right-radius:10px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Survey) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary" style="border-radius: 20px;"><i class="bi bi-pencil-square"></i> View & Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-danger" style="border-radius: 20px;"><i class="bi bi-trash3-fill"></i> Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+else
+{
+    <div class="container">
+        <div class="row justify-content-center mt-5 pt-5">
+            <div class="col-sm-6 col-md-2">
+                <div style="text-align:center;" class="svg-container">
+                    @Html.Raw(Model.SvgContent)
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center text-center">
+            <div class="col-sm-6 col-md-4">
+                <p> No surveys found</p>
+            </div>
+        </div>
+    </div>
+    <style>
+
+        .svg-container {
+            width: 100%;
+            height: auto;
+        }
+
+
+            .svg-container svg {
+                width: 100%;
+                height: auto;
+            }
+    </style>
+
+}

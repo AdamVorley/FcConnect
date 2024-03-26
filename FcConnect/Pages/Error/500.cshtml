@@ -1,0 +1,53 @@
+﻿@page
+@model FcConnect.Pages.Error._500Model
+@{
+}
+
+    <title>Error - 500</title>
+    <style>
+        body {
+            background-color: #f6e8bb;
+        }
+
+        img {
+            max-width: 100%;
+                max-height: 80%; 
+        }
+
+        p {
+            color: #053d5e;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: xx-large;
+            margin-bottom: 0px;
+        }
+
+        #small {
+            color: #053d5e;
+            font-family: monospace;
+            font-size: medium;
+        }
+    </style>
+    <div class="container mt-5 pt-5">
+        <div class="row mt-5 pt-5" style="display: inline !important;">
+        <div class="col d-flex justify-content-center">
+            <img src="/Assets/500.png" alt="Error - 500">
+            </div>
+        </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <p>Internal Server Error</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <p id="small">Please try again</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center pt-3">
+            <a asp-page="/Index" class="btn" style="background-color: #222b48; color:white;"><i class="bi bi-house-door-fill"></i>&nbsp;Home</a>
+        </div>
+    </div>
+    </div>
+

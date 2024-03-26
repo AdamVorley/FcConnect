@@ -25,7 +25,7 @@ namespace FcConnect.Pages.Messaging
         }
 
         public async Task<IActionResult> OnGetAsync()
-        {
+        {       
             // get users for recipient list
             var identityUser = await _userManager.GetUserAsync(User);
             var user = _context.User.Find(identityUser.Id);
@@ -92,7 +92,7 @@ namespace FcConnect.Pages.Messaging
            // _context.Message.Add(Message);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Messages");
         }
 
         public bool ConversationExists(User sender, User recipient)

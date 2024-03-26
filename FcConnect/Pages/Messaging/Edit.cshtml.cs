@@ -41,17 +41,18 @@ namespace FcConnect.Pages.Messaging
 
             HttpContext.Session.SetString("ConversationId", id.ToString());
 
+            var identityUser = await _userManager.GetUserAsync(User);
+            var signedInUser = _context.User.Find(identityUser.Id);
+
             userId = user;
 
             var conversation =  await _context.Conversation.Include(c => c.Users).Include(c => c.Messages).FirstOrDefaultAsync(m => m.Id == id);
 
-            /*
-             var messages = dbContext.Conversations
-    .Where(c => c.Id == conversationId) // Assuming you have a condition for the conversation ID
-    .SelectMany(c => c.Messages) // Assuming Messages is a collection navigation property in Conversations
-    .OrderByDescending(m => m.DateTime) // Sorting by Message.DateTime in descending order
-    .ToList();
-             */
+            if (!conversation.Users.Contains(signedInUser)) 
+            {
+                // if user is trying to access a conversation they are not in
+                return new StatusCodeResult(403);
+            }
 
             if (conversation == null)
             {

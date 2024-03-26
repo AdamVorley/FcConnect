@@ -98,15 +98,35 @@
             });
         });
 
+
+
         $(function () {
             // Refresh page function
             function refreshPage() {
+                
+                var maxScrollYOffset = document.documentElement.scrollHeight - window.innerHeight;
+                var currentScrollOffset = window.scrollY;
                 // check user isn't typing
                 var inputText = $('#messageTextField').val();
-                if (inputText === null || inputText.length === 0 && !$('#messageTextField').is(':focus')) {
-                    location.reload();
+
+                if (inputText === null || inputText.length === 0) {
+                    
+                    if (maxScrollYOffset - currentScrollOffset > 400) {                        
+
+                        // Set local storage data for current scroll position and max scroll value
+                        localStorage.setItem('scrollPosition', currentScrollOffset);
+                        localStorage.setItem('maxScrollPosition', maxScrollYOffset);
+
+                        location.reload();
+                    }
+                    else 
+                    {
+                        location.reload();
+                    }
                 }
             }
+
+
 
             // Refresh every 10 seconds
             setInterval(refreshPage, 10000);
@@ -115,7 +135,37 @@
 }
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        window.scrollTo(0, document.body.scrollHeight);
+        
+        // Get local storage data
+        var pos = localStorage.getItem('scrollPosition');
+        var newMaxScrollYOffset = document.documentElement.scrollHeight - window.innerHeight;
+        var priorMaxScrollOffset = localStorage.getItem('maxScrollPosition');
+
+        // check if this in the initial page load or the user is already at the bottom of the conversation
+        if (pos != null) {
+            // scroll to the user's current position
+            window.scrollTo({
+                top: pos,
+                behavior: 'smooth' 
+            });
+            // check if the max offset value has changed since before refresh, if so - new message
+            if (newMaxScrollYOffset > priorMaxScrollOffset) 
+            {
+                alert('New Message Received');
+            }
+
+        }
+        else 
+        {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // Removing local storage data
+        localStorage.removeItem('scrollPosition');
+        localStorage.removeItem('priorMaxScrollOffset');
+
+        // Clearing all local storage data
+        localStorage.clear();
 
         // Hide the footer if needed
         document.querySelector("footer").style.visibility = "hidden";

@@ -82,11 +82,27 @@ namespace FcConnect.Pages.Surveys.Assign
             }
 
             TimeSpan time = new TimeSpan(17, 00, 0);
+            int surveyAssigningId; 
+            DateTime dueDate; 
+            DateTime endDate; 
+            int frequencyDays; 
 
-            int surveyAssigningId = int.Parse(Request.Form["surveyDrop"]);
-            DateTime dueDate = DateTime.Parse(Request.Form["dueDatePicker"] + " " + time);
-            DateTime endDate = DateTime.Parse(Request.Form["endDatePicker"] + " " + time);
-            int frequencyDays = int.Parse(Request.Form["frequencyDays"]);
+            try
+            {
+                surveyAssigningId = int.Parse(Request.Form["surveyDrop"]);
+                dueDate = DateTime.Parse(Request.Form["dueDatePicker"] + " " + time);
+                endDate = DateTime.Parse(Request.Form["endDatePicker"] + " " + time);
+                frequencyDays = int.Parse(Request.Form["frequencyDays"]);
+            }
+            catch 
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            if (frequencyDays < 1) 
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
 
             surveyToAssign = new()
             {

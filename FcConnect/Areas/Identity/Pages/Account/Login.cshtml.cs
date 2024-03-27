@@ -116,6 +116,12 @@ namespace FcConnect.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // check if user has accepted terms
+                   if (User.HasClaim(c => c.Type == "TermsAccepted" && c.Value == "false")) 
+                    {
+                        return LocalRedirect("~/Terms");
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

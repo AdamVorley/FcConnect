@@ -157,6 +157,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
                     await _userManager.AddToRoleAsync(user, userRole);
 
+                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("TermsAccepted", "false"));
+
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

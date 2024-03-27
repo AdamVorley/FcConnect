@@ -7,6 +7,7 @@
         public required User User { get; set; }
         public required Survey Survey { get; set; }
         public ICollection<SurveyAnswer> Answers { get; set; } = new List<SurveyAnswer>();
+        public int StatusId { get; set; }
 
     }
 }

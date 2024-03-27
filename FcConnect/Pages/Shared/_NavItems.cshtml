@@ -3,37 +3,37 @@
 @inject UserManager<IdentityUser> UserManager
 
 
-@if (SignInManager.IsSignedIn(User))
+@if (SignInManager.IsSignedIn(User) && User.HasClaim(c => c.Type == "TermsAccepted" && c.Value == "true"))
 {
     
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Users/UserManagement">User Management</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Users/UserManagement">User Management</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Submissions/Manage/Index">Submissions</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Submissions/Manage/Index">Submissions</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Messaging/Messages">Messages</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Messaging/Messages">Messages</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Surveys/Index">Survey Management</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Surveys/Index">Survey Management</a>
             </li>
         }
         else
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Submissions/MySurveys">My Surveys</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Submissions/MySurveys">My Surveys</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-page="/Messaging/Messages">Messages</a>
+                <a class="nav-link text-light" asp-area="" asp-page="/Messaging/Messages">Messages</a>
             </li>
         }
     

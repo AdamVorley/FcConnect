@@ -6,11 +6,11 @@
     int index = 0; 
 }
 
-<h1>Index</h1>
+<h5>Messages</h5>
 
 <p>
     <a class="btn btn-primary" asp-page="NewMessage"><i class="bi bi-envelope"></i> &nbsp; New Message</a>
-    <a class="btn btn-secondary" asp-page="/"><i class="bi bi-arrow-clockwise"></i> &nbsp;Refresh</a>
+    <a class="btn btn-secondary" data-toggle="tooltip" data-bs-placement="bottom" title="Refresh messages" asp-page="/"><i class="bi bi-arrow-clockwise"></i></a>
 
 </p>
 <table class="table">
@@ -31,13 +31,15 @@
     <tbody>
 @foreach (var item in Model.Conversation) {
  
-    @for (int i = item.Messages.Count - 1; i > 0; i--)
+    @for (int i = item.Messages.Count - 1; i >= 0; i--)
     {
+        // get last message received in this conversation
         if (item.Messages.ElementAt(i).Recipient.Id == Model.userId)
         {
             index = i;
             break; 
         }
+                
     }
         <tr>
 
@@ -45,8 +47,12 @@
 
             @if (!item.Messages.ElementAt(index).IsRead)
             {
-                        <i class="bi bi-envelope-exclamation"></i>
-                    }
+                        <i class="bi bi-envelope-exclamation" data-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>
+            }
+            @if (item.Messages.ElementAt(item.Messages.Count - 1).Sender.Id == Model.userId)
+            {
+                <i class="bi bi-reply" data-toggle="tooltip" data-bs-placement="bottom" title="You replied"></i>    
+            }
                     &nbsp; @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Forename) @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Surname)
         </td>
         <td>
@@ -58,7 +64,7 @@
         </td>
         <td>                
             <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-primary"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
-            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> &nbsp; Delete</a> 
+            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger" data-toggle="tooltip" data-bs-placement="bottom" title="Delete conversation"><i class="bi bi-trash3-fill"></i></a> 
         </td>            
     </tr>
 }

@@ -54,6 +54,18 @@ namespace FcConnect.Pages.Messaging
                 return new StatusCodeResult(403);
             }
 
+            // mark message as read when opened
+            for (int i = conversation.Messages.Count - 1; i >= 0; i--) 
+            {
+                if (conversation.Messages.ElementAt(i).Sender != signedInUser && conversation.Messages.ElementAt(i).IsRead == false) 
+                {
+                    conversation.Messages.ElementAt(i).IsRead = true;
+                    break;
+                }
+            }
+
+            _context.SaveChanges();
+
             if (conversation == null)
             {
                 return NotFound();

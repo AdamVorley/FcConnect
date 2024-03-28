@@ -2,7 +2,7 @@
 @model FcConnect.Pages.Messaging.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New Message";
 
     List<SelectListItem> listUsers = new List<SelectListItem>();
     if (Model.UserTo != null)
@@ -14,9 +14,7 @@
     }
 }
 
-<h1>Create</h1>
-
-<h4>Message</h4>
+<h4>New Message</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -42,7 +40,7 @@
 </div>
 
 <div>
-    <a class="btn btn-secondary mt-3" asp-page="Index"><i class="bi bi-x-circle-fill"></i> &nbsp;Cancel</a>
+    <a class="btn btn-secondary mt-3" asp-page="Messages"><i class="bi bi-x-circle-fill"></i> &nbsp;Cancel</a>
 </div>
 
 @section Scripts {

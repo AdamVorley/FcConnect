@@ -13,60 +13,97 @@
     <a class="btn btn-secondary" data-toggle="tooltip" data-bs-placement="bottom" title="Refresh messages" asp-page="/"><i class="bi bi-arrow-clockwise"></i></a>
 
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                From
-            </th>
-            <th>
-                Received
-            </th>
-            <th>
-                Message Preview
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Conversation) {
- 
-    @for (int i = item.Messages.Count - 1; i >= 0; i--)
-    {
-        // get last message received in this conversation
-        if (item.Messages.ElementAt(i).Recipient.Id == Model.userId)
-        {
-            index = i;
-            break; 
+
+@if (Model.Conversation.Count < 1)
+{
+    <div class="container">
+        <div class="row justify-content-center mt-5 pt-5">
+            <div class="col-sm-6 col-md-3">
+                <div style="text-align:center;" class="svg-container">
+                    @Html.Raw(Model.SvgContent)
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center text-center">
+            <div class="col">
+                <p class="pt-2"> No messages yet</p>
+            </div>
+        </div>
+    </div>
+    <style>
+
+        .svg-container {
+            width: 100%;
+            height: auto;
         }
-                
-    }
-        <tr>
 
-        <td>
 
-            @if (!item.Messages.ElementAt(index).IsRead)
-            {
-                        <i class="bi bi-envelope-exclamation" data-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>
+            .svg-container svg {
+                width: 50%;
+                height: auto;
             }
-            @if (item.Messages.ElementAt(item.Messages.Count - 1).Sender.Id == Model.userId)
+    </style>
+}else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    From
+                </th>
+                <th>
+                    Received
+                </th>
+                <th>
+                    Message Preview
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Conversation)
             {
-                <i class="bi bi-reply" data-toggle="tooltip" data-bs-placement="bottom" title="You replied"></i>    
+
+                @for (int i = item.Messages.Count - 1; i >= 0; i--)
+                {
+                    // get last message received in this conversation
+                    if (item.Messages.ElementAt(i).Recipient.Id == Model.userId)
+                    {
+                        index = i;
+                        break;
+                    }
+
+                }
+                <tr>
+
+                    <td>
+
+                        @if (!item.Messages.ElementAt(index).IsRead)
+                        {
+                            <i class="bi bi-envelope-exclamation" data-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>
+                        }
+                        @if (item.Messages.ElementAt(item.Messages.Count - 1).Sender.Id == Model.userId)
+                        {
+                            <i class="bi bi-reply" data-toggle="tooltip" data-bs-placement="bottom" title="You replied"></i>
+                        }
+                        &nbsp; @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Forename) @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Surname)
+                    </td>
+                    <td>
+                        @{
+                            string received = item.Messages.ElementAt(index).DateTimeSent.ToString("dd/MM/yyyy HH:mm");
+                        }
+                        @received
+                    </td>
+                    <td class="text-truncate" style="max-width:150px;">
+                        @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).MessageContent)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-primary"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger" data-toggle="tooltip" data-bs-placement="bottom" title="Delete conversation"><i class="bi bi-trash3-fill"></i></a>
+                    </td>
+                </tr>
             }
-                    &nbsp; @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Forename) @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).Sender.Surname)
-        </td>
-        <td>
-            @{string received = item.Messages.ElementAt(index).DateTimeSent.ToString("dd/MM/yyyy HH:mm");}
-            @received
-        </td>
-        <td class="text-truncate" style="max-width:150px;">
-            @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).MessageContent)
-        </td>
-        <td>                
-            <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-primary"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
-            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger" data-toggle="tooltip" data-bs-placement="bottom" title="Delete conversation"><i class="bi bi-trash3-fill"></i></a> 
-        </td>            
-    </tr>
+        </tbody>
+    </table>
+
 }
-    </tbody>
-</table>

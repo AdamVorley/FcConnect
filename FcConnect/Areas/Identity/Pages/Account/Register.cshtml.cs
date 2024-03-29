@@ -80,6 +80,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
         /// </summary>
         /// 
 
+        [BindProperty]
         public List<IdentityRole> Roles { get; set; }
 
         public class InputModel
@@ -143,7 +144,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-                string userRole = Request.Form["rolesDrop"]; // get the selected user role from the dropdown
+
+                string userRole = Input.Role;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -171,11 +173,18 @@ namespace FcConnect.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
+                    int roleId = Constants.RoleUser;
+                    if (userRole == "User") { roleId = Constants.RoleUser; }
+                    if (userRole == "Admin") { roleId = Constants.RoleAdmin; }
+                    if (userRole == "Developer") { roleId = Constants.RoleDeveloper; }
+
                     User newUser = new()
                     {
                         Id = userId,
                         Forename = Input.Forename,
-                        Surname = Input.Surname
+                        Surname = Input.Surname,
+                        Email = Input.Email,
+                        RoleId = roleId
                     };                    
 
                     await _context.User.AddAsync(newUser);

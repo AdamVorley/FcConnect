@@ -29,7 +29,7 @@
     <thead>
         <tr>
             <th class="border-bottom" style="border-top-left-radius:10px;">
-                User Name
+                User
             </th>
             <th class="border-bottom">
                 Survey Name
@@ -44,13 +44,13 @@
 @foreach (var item in Model.SurveySubmission) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname)
+                @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname) (@Html.DisplayFor(modelItem => item.User.Email))
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Survey.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SubmittedDateTime)
+                @item.SubmittedDateTime.ToString("dd/MM/yyyy HH:mm")
             </td>
             <td>
                     <a asp-page="./View" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary"><i class="bi bi-eye-fill"></i> View</a>

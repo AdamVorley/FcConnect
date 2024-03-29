@@ -5,9 +5,10 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>SurveySubmission</h4>
+<h4>Survey Submission</h4>
+<p>User: @Model.SurveySubmission.User.Forename @Model.SurveySubmission.User.Surname - @Model.SurveySubmission.User.Email</p>
+<p>Submitted: @Model.SurveySubmission.SubmittedDateTime.ToString("dd/MM/yyyy HH:mm")</p>
 <hr />
 <div class="row">
     <div class="col-md-4">

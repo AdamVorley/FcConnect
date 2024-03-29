@@ -1,0 +1,54 @@
+﻿@page
+@model FcConnect.Pages.Users.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>Update User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="User.Id" />
+            <div class="form-group">
+                <label asp-for="User.Forename" class="control-label"></label>
+                <input asp-for="User.Forename" class="form-control" />
+                <span asp-validation-for="User.Forename" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Surname" class="control-label"></label>
+                <input asp-for="User.Surname" class="form-control" />
+                <span asp-validation-for="User.Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Email" class="control-label"></label>
+                <input asp-for="User.Email" class="form-control" />
+                <span asp-validation-for="User.Email" class="text-danger"></span>
+            </div>
+
+              <!--  <input hidden asp-for="User.RoleId" class="form-control" />-->
+
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary me-5"><i class="bi bi-floppy"></i>&nbsp; Save</button>
+                        <button class="btn btn-warning"><i class="bi bi-person-fill-slash"></i>&nbsp;Suspend User</button>
+                        <button class="btn btn-danger"><i class="bi bi-trash3-fill"></i>&nbsp;Delete User</button>
+
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-secondary mt-1" asp-page="./Index"><i class="bi bi-x-circle-fill"></i>&nbsp;Cancel</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

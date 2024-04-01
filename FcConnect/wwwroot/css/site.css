@@ -61,7 +61,7 @@ th {
 }
 
 #footer {
-    background-color: #4884e9;
+    background-color: #138b8f;    
     color: white !important;
 }
 
@@ -207,5 +207,10 @@ body {
     background-color: #f0f7f7;
 }
 
+#tableHeaderLeft {
+    border-top-left-radius: 10px;
+}
 
-
+#tableHeaderRight {
+    border-top-right-radius: 10px;
+}

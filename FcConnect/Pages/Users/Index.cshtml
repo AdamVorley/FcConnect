@@ -15,34 +15,34 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User[0].Forename)
+            <th class="border-bottom" id="tableHeaderLeft">
+                @Html.DisplayNameFor(model => model.Users[0].Forename)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User[0].Surname)
+            <th class="border-bottom">
+                @Html.DisplayNameFor(model => model.Users[0].Surname)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User[0].Email)
+            <th class="border-bottom">
+                @Html.DisplayNameFor(model => model.Users[0].Email)
             </th>
-            <th>
+            <th class="border-bottom">
                 User Role
             </th>
-            <th></th>
+            <th class="border-bottom" id="tableHeaderRight"></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.User) {
+@foreach (var item in Model.Users) {
         <tr>
-            <td>
+            <td class="align-middle">
                 @Html.DisplayFor(modelItem => item.Forename)
             </td>
-            <td>
+            <td class="align-middle">
                 @Html.DisplayFor(modelItem => item.Surname)
             </td>
-            <td>
+            <td class="align-middle">
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
+            <td class="align-middle">
                 @{
                     string role;
                     int roleId = item.RoleId;

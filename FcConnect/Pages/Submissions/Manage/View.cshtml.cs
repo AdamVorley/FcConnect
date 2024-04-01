@@ -55,14 +55,17 @@ namespace FcConnect.Pages.Submissions.Manage
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(SurveySubmission surveySubmission)
         {
-            if (!ModelState.IsValid)
+         /*   if (!ModelState.IsValid)
             {
                 return Page();
-            }
+            }*/
 
-            _context.Attach(SurveySubmission).State = EntityState.Modified;
+            _context.SurveySubmission.Attach(surveySubmission);
+            _context.Entry(surveySubmission).Property(s => s.StatusId).IsModified = true;
+
+        //    _context.Attach(SurveySubmission).State = EntityState.Modified;
 
             try
             {

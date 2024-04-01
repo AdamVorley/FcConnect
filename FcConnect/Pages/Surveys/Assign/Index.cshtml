@@ -30,27 +30,33 @@
 <table class="table">
     <thead>
         <tr>
-            <th class="border-bottom" style="border-top-left-radius:10px;">
+            <th class="border-bottom" id="tableHeaderLeft">
                 @Html.DisplayNameFor(model => model.User[0].Forename)
             </th>
             <th class="border-bottom">
                 @Html.DisplayNameFor(model => model.User[0].Surname)
             </th>
-            <th class="border-bottom" style="border-top-right-radius:10px;"></th>
+            <th class="border-bottom">
+                @Html.DisplayNameFor(model => model.User[0].Email)
+            </th>
+            <th class="border-bottom" id="tableHeaderRight"></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.User) {
         <tr>
-            <td>
+            <td class="align-middle">
                 @Html.DisplayFor(modelItem => item.Forename)
             </td>
-            <td>
+            <td class="align-middle">
                 @Html.DisplayFor(modelItem => item.Surname)
             </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
             <td>
-                <a asp-page="./AssignSurvey" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary" style="border-radius:25px"><i class="bi bi-person-check-fill"></i> Assign</a>
-                <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-secondary" style="border-radius:25px"><i class="bi bi-eye"></i> View Surveys</a>
+                <a asp-page="./AssignSurvey" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary" style="border-radius:25px"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>
+                <a asp-page="./RemoveSurveys" asp-route-id="@item.Id" class="btn btn-danger" style="border-radius:25px"><i class="bi bi-person-x-fill"></i>&nbsp;Remove</a>
             </td>
         </tr>
 }

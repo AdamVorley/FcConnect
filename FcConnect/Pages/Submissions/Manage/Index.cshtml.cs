@@ -21,22 +21,39 @@ namespace FcConnect.Pages.Submissions.Manage
 
         public IList<SurveySubmission> SurveySubmission { get; set; } = default!;
         public string CurrentFilter { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public bool ReviewedCheckHidden { get; set; }
+
 
 
         public async Task OnGetAsync(string searchString)
         {
             CurrentFilter = searchString;
 
+            // Retrieve the value of the checkbox
+            bool showReviewedSubmissions = ReviewedCheckHidden;
+            int statusSubmissionId = Constants.StatussSubmissionPendingReview;
+
+            if (!showReviewedSubmissions)
+            {
+                statusSubmissionId = Constants.StatussSubmissionPendingReview;
+            }
+            else 
+            {
+                statusSubmissionId = Constants.StatussSubmissionReviewed;
+            }
+
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 SurveySubmission = await _context.SurveySubmission.Include(s => s.User).Include(s => s.Survey).OrderByDescending(s => s.SubmittedDateTime)
                 .Where(s => s.User.Surname.Contains(searchString) || s.User.Forename.Contains(searchString) ||
-                (s.User.Forename + " " + s.User.Surname).Contains(searchString)).ToListAsync();
+                (s.User.Forename + " " + s.User.Surname).Contains(searchString)).Where(s => s.StatusId <= statusSubmissionId).ToListAsync();
             }
             else
             {
 
-                SurveySubmission = await _context.SurveySubmission.Include(s => s.User).Include(s => s.Survey).OrderByDescending(s => s.SubmittedDateTime).ToListAsync();
+                SurveySubmission = await _context.SurveySubmission.Where(s => s.StatusId <= statusSubmissionId).Include(s => s.User).Include(s => s.Survey).OrderByDescending(s => s.SubmittedDateTime).ToListAsync();
             }
 
         }

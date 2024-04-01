@@ -14,12 +14,13 @@
     }
 
     var username = Model.User.Forename + " " + Model.User.Surname;
+    var email = Model.User.Email;
 
 }
 
 <h4>Assign Survey</h4>
 
-<h6>Assigning to user: @username</h6>
+<h6>Assigning to user: @username - @email</h6>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -39,7 +40,7 @@
             @{
                 if (Model.UserCurrentSurveys.Count < 1)
                 {                    
-                    <p>-- No Surveys Assigned --</p>
+                    <p>- No Surveys Assigned -</p>
                 }
                 if (Model.UserCurrentSurveys != null)
                 {

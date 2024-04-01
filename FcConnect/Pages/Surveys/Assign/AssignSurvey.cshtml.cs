@@ -74,7 +74,7 @@ namespace FcConnect.Pages.Surveys.Assign
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string id)
         {
             if (!ModelState.IsValid)
             {
@@ -104,9 +104,13 @@ namespace FcConnect.Pages.Surveys.Assign
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
+              var user = await _context.User.Include(u => u.Surveys).FirstOrDefaultAsync(u => u.Id == id);
+            //var user = await _context.User.Include(u => u.Surveys).);
+
+
             surveyToAssign = new()
             {
-                User = User,
+                User = user,
                 SurveyId = surveyAssigningId,
                 DateDue = dueDate, //TODO - add a field to allow user to pick date
                 EndDate = endDate,
@@ -115,7 +119,7 @@ namespace FcConnect.Pages.Surveys.Assign
             };
 
             _context.Add(surveyToAssign);
-            _context.Attach(User).State = EntityState.Modified;
+           // _context.Attach(User).State = EntityState.Modified;
 
             try
             {

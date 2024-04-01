@@ -11,6 +11,7 @@ namespace FcConnect.Models
         public required string Forename { get; set; }
         [ValidateNever]
         public required string Surname { get; set; }
+        [ValidateNever]
         public required string Email { get; set; }
         public int RoleId { get; set; }
         public ICollection<SurveyUserLink> Surveys { get; set; } = new List<SurveyUserLink>();

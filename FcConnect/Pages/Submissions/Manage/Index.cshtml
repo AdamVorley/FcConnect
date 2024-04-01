@@ -10,15 +10,22 @@
 <h4>Submissions</h4>
 <hr />
 
-<form asp-page="./Index" method="get">
+<form asp-page="./Index" method="get" id="filters">
     <div class="form-actions no-color">
         <div class="row mt-2">
-            <div class="col-sm-12 col-md-4 mb-3">
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                 <div class="input-group">
-                    <input class="form-control" name="SearchString" type="text" placeholder="Search by name" id="customTextField" />
+                    <input class="form-control" name="SearchString" type="text" placeholder="Search by name" id="customTextField" value="@Request.Query["SearchString"]" />
                     <div class="input-group-append">
                         <button type="submit" value="Search" class="btn btn-primary" id="customTextFieldButton"><i class="bi bi-search"></i> Search</button>
                     </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3 d-flex align-items-center">
+                <div class="form-check">
+                    <input type="hidden" id="ReviewedCheckHidden" name="ReviewedCheckHidden" value="false" />
+                    <input class="form-check-input me-1" name="ReviewedCheck" type="checkbox" id="reviewSubmissionsCheck" onchange="this.form.submit()">
+                    <label class="form-check-label" for="reviewSubmissionsCheck">Show reviewed submissions</label>
                 </div>
             </div>
         </div>
@@ -28,7 +35,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th class="border-bottom" style="border-top-left-radius:10px;">
+            <th class="border-bottom" id="tableHeaderLeft">
                 User
             </th>
             <th class="border-bottom">
@@ -37,13 +44,26 @@
             <th class="border-bottom">
                 Date Submitted
             </th>
-            <th class="border-bottom" style="border-top-right-radius:10px;"></th>
+            <th class="border-bottom" id="tableHeaderRight"></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.SurveySubmission) {
-        <tr>
-            <td>
+            <tr>
+                <td>
+                @{
+                    if (item.StatusId == Constants.StatussSubmissionPendingReview)
+                    {
+                        <i class="bi bi-exclamation-lg" data-toggle="tooltip" data-bs-placement="bottom" title="Awaiting Review"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-check2" data-toggle="tooltip" data-bs-placement="bottom" title="Reviewed"></i>
+
+                        
+                    }
+                    }
+                
                 @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname) (@Html.DisplayFor(modelItem => item.User.Email))
             </td>
             <td>
@@ -59,3 +79,20 @@
 }
     </tbody>
 </table>
+
+<script>
+
+    var isChecked = sessionStorage.getItem('reviewSubmissionsChecked') === 'true';
+    document.querySelector('input[name="ReviewedCheckHidden"]').value = isChecked.toString();
+
+    document.getElementById('reviewSubmissionsCheck').checked = isChecked;
+
+
+
+    document.getElementById('reviewSubmissionsCheck').addEventListener('change', function () {
+        var isChecked = this.checked;
+        document.querySelector('input[name="ReviewedCheckHidden"]').value = isChecked.toString();
+        sessionStorage.setItem('reviewSubmissionsChecked', this.checked.toString());
+        document.getElementById('filters').submit();
+    });
+</script>

@@ -1,0 +1,51 @@
+﻿@page
+@model FcConnect.Pages.Surveys.Assign.RemoveSurveysModel
+
+@{
+    ViewData["Title"] = "Remove Surveys";
+}
+
+<h5>Remove Surveys</h5>
+<p><strong>User: </strong>@Model.User.Forename @Model.User.Surname - @Model.User.Email</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Survey Name
+            </th>
+            <th>
+                Next Due Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                Survey Frequency
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{int i = 0;}
+@foreach (var item in Model.SurveyUserLink) {
+        <tr>
+            <td class="align-middle">
+                @Model.Surveys.ElementAt(i).Name
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.DateDue)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.SurveyFrequency)
+            </td>
+            <td>
+                <a class="btn btn-danger" asp-page="./RemoveSurvey" asp-route-id="@item.Id"><i class="bi bi-trash3-fill"></i>&nbsp;Remove</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

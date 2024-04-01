@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FcConnect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240323125233_Initial")]
-    partial class Initial
+    [Migration("20240401174052_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace FcConnect.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ConversationUser", b =>
+                {
+                    b.Property<Guid>("ConversationsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ConversationsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ConversationUser");
+                });
 
             modelBuilder.Entity("FcConnect.Models.Conversation", b =>
                 {
@@ -154,6 +169,9 @@ namespace FcConnect.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("SubmittedDateTime")
                         .HasColumnType("datetime2");
 
@@ -210,20 +228,22 @@ namespace FcConnect.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("ConversationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Forename")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
 
                     b.ToTable("User");
                 });
@@ -430,6 +450,21 @@ namespace FcConnect.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ConversationUser", b =>
+                {
+                    b.HasOne("FcConnect.Models.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FcConnect.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FcConnect.Models.Message", b =>
                 {
                     b.HasOne("FcConnect.Models.Conversation", null)
@@ -501,13 +536,6 @@ namespace FcConnect.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FcConnect.Models.User", b =>
-                {
-                    b.HasOne("FcConnect.Models.Conversation", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ConversationId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -562,8 +590,6 @@ namespace FcConnect.Migrations
             modelBuilder.Entity("FcConnect.Models.Conversation", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("FcConnect.Models.Survey", b =>

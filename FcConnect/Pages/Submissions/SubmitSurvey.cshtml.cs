@@ -83,7 +83,8 @@ namespace FcConnect.Pages.Submissions
                 SubmittedDateTime = DateTime.Now,
                 User = SurveyUserLink.User,
                 Survey = survey,
-                Answers = surveyAnswers
+                Answers = surveyAnswers,
+                StatusId = Constants.StatussSubmissionPendingReview
             };
 
             _context.SurveySubmission.Add(surveySubmission);
@@ -94,7 +95,7 @@ namespace FcConnect.Pages.Submissions
                 SurveyUserLink.StatusId = Constants.StatusSurveyCompleted;
             }
 
-            if (SurveyUserLink.EndDate > DateTime.Now) 
+            if (SurveyUserLink.EndDate.Date > DateTime.Now) 
             {
                 // Create new SurveyUserLink
                 newSurveyUserLink = new()

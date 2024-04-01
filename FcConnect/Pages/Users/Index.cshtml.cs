@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FcConnect.Pages.Users
 {
@@ -16,17 +17,23 @@ namespace FcConnect.Pages.Users
     public class IndexModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public IndexModel(FcConnect.Data.ApplicationDbContext context)
+
+        public IndexModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public IList<User> User { get;set; } = default!;
+        public IList<User> Users { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            User = await _context.User.ToListAsync();
+            var identityUser = await _userManager.GetUserAsync(User);
+            var signedInUser = _context.User.Find(identityUser.Id);
+
+            Users = await _context.User.Where(u => u != signedInUser).ToListAsync();
         }
     }
 }

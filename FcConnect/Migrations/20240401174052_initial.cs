@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FcConnect.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,6 +73,21 @@ namespace FcConnect.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Survey", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Forename = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -182,25 +197,6 @@ namespace FcConnect.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Forename = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_User_Conversation_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversation",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SurveyQuestion",
                 columns: table => new
                 {
@@ -217,6 +213,30 @@ namespace FcConnect.Migrations
                         name: "FK_SurveyQuestion_Survey_SurveyId",
                         column: x => x.SurveyId,
                         principalTable: "Survey",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConversationUser",
+                columns: table => new
+                {
+                    ConversationsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConversationUser", x => new { x.ConversationsId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_ConversationUser_Conversation_ConversationsId",
+                        column: x => x.ConversationsId,
+                        principalTable: "Conversation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConversationUser_User_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -261,7 +281,8 @@ namespace FcConnect.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SubmittedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    SurveyId = table.Column<int>(type: "int", nullable: false)
+                    SurveyId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -369,6 +390,11 @@ namespace FcConnect.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConversationUser_UsersId",
+                table: "ConversationUser",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Message_ConversationId",
                 table: "Message",
                 column: "ConversationId");
@@ -412,11 +438,6 @@ namespace FcConnect.Migrations
                 name: "IX_SurveyUserLink_UserId",
                 table: "SurveyUserLink",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_ConversationId",
-                table: "User",
-                column: "ConversationId");
         }
 
         /// <inheritdoc />
@@ -438,6 +459,9 @@ namespace FcConnect.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ConversationUser");
+
+            migrationBuilder.DropTable(
                 name: "Message");
 
             migrationBuilder.DropTable(
@@ -456,6 +480,9 @@ namespace FcConnect.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Conversation");
+
+            migrationBuilder.DropTable(
                 name: "SurveySubmission");
 
             migrationBuilder.DropTable(
@@ -463,9 +490,6 @@ namespace FcConnect.Migrations
 
             migrationBuilder.DropTable(
                 name: "User");
-
-            migrationBuilder.DropTable(
-                name: "Conversation");
         }
     }
 }

@@ -34,7 +34,14 @@
                 <div class="row">
                     <div class="col">
                         <button type="submit" class="btn btn-primary me-5"><i class="bi bi-floppy"></i>&nbsp; Save</button>
-                        <button class="btn btn-warning"><i class="bi bi-person-fill-slash"></i>&nbsp;Suspend User</button>
+                        @if (Model.User.UserStatusId == Constants.StatusUserActive)
+                        {                            
+                            <a asp-page="./SuspendUser" asp-route-id="@Model.User.Id" class="btn btn-warning"><i class="bi bi-person-fill-slash"></i>&nbsp;Suspend User</a>
+                        }
+                        @if (Model.User.UserStatusId == Constants.StatusUserSuspended)
+                        {
+                            <a asp-page="./SuspendUser" asp-route-id="@Model.User.Id" class="btn btn-success"><i class="bi bi-person-fill-check"></i>&nbsp;Reinstate User</a>
+                        }
                         <button class="btn btn-danger"><i class="bi bi-trash3-fill"></i>&nbsp;Delete User</button>
 
                     </div>

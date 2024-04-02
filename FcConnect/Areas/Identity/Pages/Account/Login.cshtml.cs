@@ -119,9 +119,18 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
                     // check if user has accepted terms
                    if (User.HasClaim(c => c.Type == "TermsAccepted" && c.Value == "false")) 
+                   {
+                       return LocalRedirect("~/Terms");
+                   }
+
+                    // Check if user is suspended
+                    if (User.HasClaim(c => c.Type == "UserSuspended" && c.Value == "true"))
                     {
-                        return LocalRedirect("~/Terms");
+                        await _signInManager.SignOutAsync();
+                        ModelState.AddModelError(string.Empty, "Account suspended.");
+                        return Page(); //TODO add account suspened page
                     }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

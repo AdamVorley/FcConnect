@@ -1,0 +1,47 @@
+﻿@page
+@model FcConnect.Pages.Users.SuspendUserModel
+
+@{
+    ViewData["Title"] = "SuspendUser";
+    string confirmMessageText = "";
+    string buttonText = "";
+    string buttonClass = "";
+    string buttonIcon = "";
+}
+
+<h4>Suspend User</h4>
+
+<p><strong>User:</strong> @Model.User.Forename @Model.User.Surname - @Model.User.Email</p>
+
+@if (Model.User.UserStatusId == Constants.StatusUserActive)
+{
+    confirmMessageText = "Are you sure you wish to suspend this user?";
+    buttonText = "Suspend User";
+    buttonClass = "btn btn-danger";
+    buttonIcon = "<i class=\"bi bi-person-fill-slash\"></i>";
+}
+else
+{    
+    confirmMessageText = "Are you sure you wish to reinstate this user?";
+    buttonText = "Reinstate User";
+    buttonClass = "btn btn-success";
+    buttonIcon = "<i class=\"bi bi-person-fill-check\"></i>";
+}
+
+<p class="text-danger"><strong>@confirmMessageText</strong></p>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">            
+            <div class="form-group">
+                <button type="submit" class="@buttonClass">@Html.Raw(buttonIcon)&nbsp;@buttonText</button>
+            </div>
+        </form>
+        <a class="btn btn-secondary mt-2" asp-page="./Index"><i class="bi bi-x-circle-fill"></i>&nbsp;Cancel</a>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

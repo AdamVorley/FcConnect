@@ -32,9 +32,13 @@
     </thead>
     <tbody>
 @foreach (var item in Model.Users) {
-        <tr>
+            <tr>
             <td class="align-middle">
-                @Html.DisplayFor(modelItem => item.Forename)
+                @if (item.UserStatusId == Constants.StatusUserSuspended)
+                {
+                    <i class="bi bi-person-fill-x text-danger" data-toggle="tooltip" data-bs-placement="bottom" title="User Suspended"></i>
+                }
+                &nbsp;@Html.DisplayFor(modelItem => item.Forename)
             </td>
             <td class="align-middle">
                 @Html.DisplayFor(modelItem => item.Surname)

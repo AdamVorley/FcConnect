@@ -184,7 +184,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
                         Forename = Input.Forename,
                         Surname = Input.Surname,
                         Email = Input.Email,
-                        RoleId = roleId
+                        RoleId = roleId,
+                        UserStatusId = Constants.StatusUserActive
                     };                    
 
                     await _context.User.AddAsync(newUser);

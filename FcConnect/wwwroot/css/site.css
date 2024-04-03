@@ -26,9 +26,8 @@ a.btn {
     background-color: #0e3069;
     border-color: #0e3069;
 }
-
 .btn-primary:hover {
-    background-color: #13418f; 
+    background-color: #13418f;
     border-color: #13418f;
 }
 
@@ -213,4 +212,8 @@ body {
 
 #tableHeaderRight {
     border-top-right-radius: 10px;
+}
+
+.round {
+    border-radius:8px;
 }

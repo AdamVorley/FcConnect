@@ -7,11 +7,38 @@
     HttpContext.Session.SetString("UserEditClick", clickCheck.ToString());
 }
 
-<h4>User Management</h4>
+        <div class="row g-0 mb-2">
+            <div class="col d-flex align-items-center">
+                @Html.Raw(Model.SvgContent)
+                <h5 class="card-title quicksandText mt-1 pt-5">User <br /> Management</h5>
+            </div>  
+            <div class="col d-flex justify-content-end align-items-end">
+                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary mt-1"><i class="bi bi-person-add"></i>&nbsp;Add new user</a>
+            </div>
+      </div>
+      <hr />
+<form asp-page="./Index" method="get" id="filters">
+    <div class="form-actions no-color">
+        <div class="row mt-2">
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                <div class="input-group">
+                    <input class="form-control" name="SearchString" type="text" placeholder="Search by name" id="customTextField" value="@Request.Query["SearchString"]" />
+                    <div class="input-group-append">
+                        <button type="submit" value="Search" class="btn btn-primary" id="customTextFieldButton"><i class="bi bi-search"></i> Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3 d-flex align-items-center">
+                <div class="form-check">
+                    <input type="hidden" id="SuspendedCheckHidden" name="SuspendedCheckHidden" value="false" />
+                    <input class="form-check-input me-1" name="SuspendedCheck" type="checkbox" id="suspendedUsersCheck" onchange="this.form.submit()">
+                    <label class="form-check-label" for="suspendedUsersCheck">Show suspended users</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
-<p>
-    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary"><i class="bi bi-person-add"></i>&nbsp;Add new user</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -70,10 +97,25 @@
 
             </td>
             <td>
-                <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-pencil"></i>&nbsp;Edit</a> 
+                <a class="btn btn-border-primary" asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-pencil"></i>&nbsp;Edit</a> 
                 <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-trash3"></i></a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<script>
+
+    var isChecked = sessionStorage.getItem('suspendedUsersChecked') === 'true';
+    document.querySelector('input[name="SuspendedCheckHidden"]').value = isChecked.toString();
+
+    document.getElementById('suspendedUsersCheck').checked = isChecked;
+
+    document.getElementById('suspendedUsersCheck').addEventListener('change', function () {
+        var isChecked = this.checked;
+        document.querySelector('input[name="SuspendedCheckHidden"]').value = isChecked.toString();
+        sessionStorage.setItem('suspendedUsersChecked', this.checked.toString());
+        document.getElementById('filters').submit();
+    });
+</script>

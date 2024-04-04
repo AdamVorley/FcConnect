@@ -7,11 +7,20 @@
     HttpContext.Session.SetString("EditSurveyClick", clickCheck.ToString());
 }
 
-<h4>Survey Management</h4>
+<div class="row g-0 mb-2">
+    <div class="col-sm-12 col-md-8 d-flex align-items-center">
+        @Html.Raw(Model.SvgHeaderContent)
+        <h5 class="card-title quicksandText mt-1 pt-5">Survey <br /> Management</h5>
+    </div>
+    <div class="col-sm-12 col-md-4  d-flex justify-content-end align-items-end">
+        <a  class="btn btn-primary text-center me-1" asp-page="Create"><i class="bi bi-plus-circle"></i> Create New</a>
+        <a class="btn btn-secondary" asp-page="Assign/Index"><i class="bi bi-person-fill-add"></i> Assign Survey</a>
+    </div>
+</div>
+<hr />
 
-
-    <a style="display: inline-block; vertical-align: middle;" class="btn btn-primary text-center" asp-page="Create"><i class="bi bi-plus-circle"></i> Create New</a>
-    <a class="btn btn-secondary" asp-page="Assign/Index"><i class="bi bi-person-fill-add"></i> Assign Survey</a>
+  <!--  <a style="display: inline-block; vertical-align: middle;" class="btn btn-primary text-center" asp-page="Create"><i class="bi bi-plus-circle"></i> Create New</a>
+  <a class="btn btn-secondary" asp-page="Assign/Index"><i class="bi bi-person-fill-add"></i> Assign Survey</a>-->
 
 @if (Model.Survey.Count > 0)
 {    
@@ -45,7 +54,7 @@ else
         <div class="row justify-content-center mt-5 pt-5">
             <div class="col-sm-6 col-md-2">
                 <div style="text-align:center;" class="svg-container">
-                    @Html.Raw(Model.SvgContent)
+                    @Html.Raw(Model.SvgHeaderContent)
                 </div>
             </div>
         </div>

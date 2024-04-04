@@ -25,15 +25,15 @@ namespace FcConnect.Pages.Surveys
         }
 
         public IList<Survey> Survey { get;set; } = default!;
-        public string SvgContent { get; private set; }
+        public string SvgHeaderContent { get; private set; }
 
 
         public async Task OnGetAsync()
         {
             Survey = await _context.Survey.ToListAsync();
 
-            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "survey.svg");
-            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "undraw_job_hunt_re_q203.svg");
+            SvgHeaderContent = System.IO.File.ReadAllText(svgFilePath);
         }
     }
 }

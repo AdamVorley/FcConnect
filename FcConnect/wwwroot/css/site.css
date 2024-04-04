@@ -21,6 +21,15 @@ html {
 a.btn {
     border-radius:25px;
 }
+.btn-border-primary {
+    border-color: #0e3069 !important;
+    color: #0e3069 !important;
+}
+
+.btn-border-primary:hover {
+    background-color: #0e3069 !important;
+    color: white !important;
+}
 
 .btn-primary {
     background-color: #0e3069;
@@ -216,4 +225,8 @@ body {
 
 .round {
     border-radius:8px;
+}
+
+.quicksandText {
+    font-family: "Quicksand", sans-serif !important;
 }

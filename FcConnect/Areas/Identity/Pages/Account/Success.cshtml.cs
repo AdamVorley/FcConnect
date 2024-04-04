@@ -16,7 +16,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
         public void OnGet()
         {
-            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "success.svg");
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "success_.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
         }
     }

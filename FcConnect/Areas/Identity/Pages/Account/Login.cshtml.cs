@@ -22,11 +22,15 @@ namespace FcConnect.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IWebHostEnvironment webHostEnvironment)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
+
         }
 
         /// <summary>
@@ -83,7 +87,9 @@ namespace FcConnect.Areas.Identity.Pages.Account
             /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+
         }
+        public string SvgContent { get; private set; }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -98,6 +104,9 @@ namespace FcConnect.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "family.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
             ReturnUrl = returnUrl;
         }
@@ -133,6 +142,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
                     return LocalRedirect(returnUrl);
                 }
+                var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "family.svg");
+                SvgContent = System.IO.File.ReadAllText(svgFilePath);
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });

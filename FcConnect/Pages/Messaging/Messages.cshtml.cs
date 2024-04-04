@@ -28,6 +28,7 @@ namespace FcConnect.Pages.Messaging
         public IList<Conversation> Conversation { get; set; }
         public string userId;
         public string SvgContent { get; private set; }
+        public string SvgHeaderContent { get; private set; }
 
 
         public async Task OnGetAsync()
@@ -40,9 +41,12 @@ namespace FcConnect.Pages.Messaging
             Conversation = await _context.Conversation.Where(c => c.Users.Contains(user) && c.Messages.Any(m => m.Recipient == user)).OrderByDescending(c => c.LastMessageSent)
                 .Include(c => c.Messages).Include(c => c.Users).ToListAsync();
 
+            var svgHeaderFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "messages.svg");
+            SvgHeaderContent = System.IO.File.ReadAllText(svgHeaderFilePath);
+
             if (Conversation.Count < 1) 
             {            
-                var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "mail_1.svg");
+                var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "no_messages.svg");
                 SvgContent = System.IO.File.ReadAllText(svgFilePath);
             }
 

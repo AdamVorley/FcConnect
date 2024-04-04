@@ -47,7 +47,7 @@ namespace FcConnect.Pages.Submissions
                 }
             }
 
-            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "caught-up.svg");
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "caught_up.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
         }
     }

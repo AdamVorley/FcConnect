@@ -1,0 +1,23 @@
+﻿@page
+@model FcConnect.Pages.Terms.TermsAcceptedModel
+@{
+}
+
+<div class="container">
+    <div class="row g-0 mb-0 mt-5 pt-5">
+        <div class="col-12 d-flex justify-content-center">
+            @Html.Raw(Model.SvgContent)
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <h5 class="card-title quicksandText">Terms Accepted</h5>
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <p class="quicksandText text-center">Thanks! Please now sign out and back in again to use the application.</p>
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                <!-- Sign out if terms not accepted -->
+                <button type="submit" class="btn btn-primary quicksandText"><i class="bi bi-box-arrow-left"></i>&nbsp;Sign Out</button>
+            </form>
+        </div>
+</div>

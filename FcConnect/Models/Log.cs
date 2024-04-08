@@ -10,5 +10,6 @@ namespace FcConnect.Models
         public int Type { get; set; }
         public required string IpAddress { get; set; }
         public required string SignedInUserId { get; set; }
+        public DateTime TimeStamp { get; set; } = DateTime.Now;
     }
 }

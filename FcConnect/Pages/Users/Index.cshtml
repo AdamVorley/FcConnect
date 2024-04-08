@@ -107,6 +107,13 @@
 
 <script>
 
+    const queryString = window.location.search;
+
+    // ensure checkbox is unchecked and hidden field value is false on initial page load (by checking for query string)
+    if (queryString === null || queryString === '') {
+        sessionStorage.setItem('suspendedUsersChecked', 'false');
+    }
+
     var isChecked = sessionStorage.getItem('suspendedUsersChecked') === 'true';
     document.querySelector('input[name="SuspendedCheckHidden"]').value = isChecked.toString();
 

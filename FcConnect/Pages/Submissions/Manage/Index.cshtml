@@ -5,6 +5,8 @@
     ViewData["Title"] = "Submissions";
     Guid clickCheck = Guid.NewGuid();
     HttpContext.Session.SetString("EditClick", clickCheck.ToString());
+
+
 }
 
 
@@ -29,7 +31,7 @@
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3 d-flex align-items-center">
                 <div class="form-check">
-                    <input type="hidden" id="ReviewedCheckHidden" name="ReviewedCheckHidden" value="false" />
+                    <input type="hidden" id="ReviewedCheckHidden" name="ReviewedCheckHidden"/>
                     <input class="form-check-input me-1" name="ReviewedCheck" type="checkbox" id="reviewSubmissionsCheck" onchange="this.form.submit()">
                     <label class="form-check-label" for="reviewSubmissionsCheck">Show reviewed submissions</label>
                 </div>
@@ -60,11 +62,11 @@
                 @{
                     if (item.StatusId == Constants.StatussSubmissionPendingReview)
                     {
-                        <i class="bi bi-exclamation-lg" data-toggle="tooltip" data-bs-placement="bottom" title="Awaiting Review"></i>
+                                <i class="bi bi-exclamation-lg" data-toggle="tooltip" data-bs-placement="bottom" title="Awaiting Review"></i>
                     }
                     else
                     {
-                        <i class="bi bi-check2" data-toggle="tooltip" data-bs-placement="bottom" title="Reviewed"></i>
+                                <i class="bi bi-check2" data-toggle="tooltip" data-bs-placement="bottom" title="Reviewed"></i>
 
                         
                     }
@@ -87,14 +89,19 @@
 </table>
 
 <script>
+    
+    const queryString = window.location.search;
 
+    // ensure checkbox is unchecked and hidden field value is false on initial page load (by checking for query string)
+    if (queryString === null || queryString === '') 
+    {
+        sessionStorage.setItem('reviewSubmissionsChecked', 'false');
+    }
     var isChecked = sessionStorage.getItem('reviewSubmissionsChecked') === 'true';
     document.querySelector('input[name="ReviewedCheckHidden"]').value = isChecked.toString();
-
     document.getElementById('reviewSubmissionsCheck').checked = isChecked;
 
-
-
+    // event listener for change of checkbox value
     document.getElementById('reviewSubmissionsCheck').addEventListener('change', function () {
         var isChecked = this.checked;
         document.querySelector('input[name="ReviewedCheckHidden"]').value = isChecked.toString();

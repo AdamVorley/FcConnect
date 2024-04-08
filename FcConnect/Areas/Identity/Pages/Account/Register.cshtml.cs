@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FcConnect.Areas.Identity.Pages.Account
 {
@@ -176,8 +177,29 @@ namespace FcConnect.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "FcConnect Portal - Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    try
+                    {
+                        await _emailSender.SendEmailAsync(Input.Email, "FcConnect Portal - Confirm your email",
+        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    }
+                    catch (Exception ex) 
+                    {
+                        Log errorLog = new()
+                        {
+                            Description = ex.Message.ToString(),
+                            Name = "Email Send Failure",
+                            Type = -1,
+                            IpAddress = "",
+                            SignedInUserId = ""
+
+                        };
+                        _context.Log.Add(errorLog);
+                        await _context.SaveChangesAsync();
+                        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+
+                    }
+
+
 
                     int roleId = Constants.RoleUser;
                     if (userRole == "User") { roleId = Constants.RoleUser; }

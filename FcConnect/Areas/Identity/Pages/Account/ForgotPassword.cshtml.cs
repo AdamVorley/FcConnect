@@ -21,11 +21,15 @@ namespace FcConnect.Areas.Identity.Pages.Account
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ForgotPasswordModel(UserManager<IdentityUser> userManager, IEmailSender emailSender)
+
+        public ForgotPasswordModel(UserManager<IdentityUser> userManager, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _webHostEnvironment = webHostEnvironment;
+
         }
 
         /// <summary>
@@ -48,6 +52,15 @@ namespace FcConnect.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+        }
+
+        public string SvgContent { get; set; }
+
+        public async Task OnGetAsync() 
+        {
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "password_reset.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
         }
 
         public async Task<IActionResult> OnPostAsync()

@@ -32,6 +32,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
 
 
@@ -42,7 +43,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender,
-            FcConnect.Data.ApplicationDbContext context)
+            FcConnect.Data.ApplicationDbContext context,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -52,7 +54,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
             _roleManager = roleManager;
             _emailSender = emailSender;
             _context = context;
-
+            _webHostEnvironment = webHostEnvironment;
         }
 
         /// <summary>
@@ -123,6 +125,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
         }
 
+        public string SvgContent { get; set; }
         public void GetUserRoles() 
         {
             Roles = _roleManager.Roles.ToList();
@@ -132,6 +135,9 @@ namespace FcConnect.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "add_user.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
             // retrieve roles from the database for dropdown
             GetUserRoles();

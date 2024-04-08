@@ -7,9 +7,15 @@
     HttpContext.Session.SetString("EditClick", clickCheck.ToString());
 }
 
-<h4>Submissions</h4>
-<hr />
 
+
+<div class="row g-0 mb-2">
+    <div class="col-sm-12 col-md-8 d-flex align-items-end">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText ps-2">Survey<br />Submissions</h5>
+    </div>
+</div>
+<hr class="mt-0" />
 <form asp-page="./Index" method="get" id="filters">
     <div class="form-actions no-color">
         <div class="row mt-2">

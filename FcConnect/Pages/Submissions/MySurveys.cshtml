@@ -5,7 +5,13 @@
     ViewData["Title"] = "My Surveys";
 }
 
-<h4>My Surveys</h4>
+<div class="row g-0 mb-2">
+    <div class="col-sm-12 col-md-8 d-flex align-items-end">
+        @Html.Raw(Model.SvgHeaderContent)
+        <h5 class="card-title quicksandText ps-2">My<br />Surveys</h5>
+    </div>
+</div>
+<hr class="mt-0" />
 
 @if (Model.SurveyUserLink.Count == 0)
 {

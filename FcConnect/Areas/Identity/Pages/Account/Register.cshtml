@@ -4,8 +4,6 @@
     ViewData["Title"] = "Register";
 }
 
-<h4>Create New User</h4>
-
 @{
     List<SelectListItem> listRoles = new List<SelectListItem>();
 
@@ -14,35 +12,39 @@
         listRoles.Add(new SelectListItem { Text = role.ToString(), Value = role.ToString() });
     }
 }
+<div class="row g-0 mb-0">
+    <div class="col d-flex align-items-center">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText ps-1 mt-5">Create <br />New User</h5>
+    </div>
+    <hr />
 
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h6>Add a new user to the system</h6>
-            <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="mb-1">
-                <label asp-for="Input.Email">Email</label>
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />                
+                <label asp-for="Input.Email" class="mt-1">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter an email address" />                
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="mb-1">
-                <label asp-for="Input.Password">Password</label>
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.Password" class="mt-1">Password</label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter a password" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
             <div class="mb-1">
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.ConfirmPassword" class="mt-1">Confirm Password</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm password" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="mb-1">
-                <label asp-for="Input.Forename">Forename</label>
+                <label asp-for="Input.Forename" class="mt-1">Forename</label>
                 <input asp-for="Input.Forename" class="form-control" aria-required="true" placeholder="Forename" />
                 <span asp-validation-for="Input.Forename" class="text-danger"></span>
             </div>
             <div class="mb-1">
-                <label asp-for="Input.Surname">Surname</label>
+                <label asp-for="Input.Surname" class="mt-1">Surname</label>
                 <input asp-for="Input.Surname" class="form-control" aria-required="true" placeholder="Surname" />
                 <span asp-validation-for="Input.Surname" class="text-danger"></span>
             </div>

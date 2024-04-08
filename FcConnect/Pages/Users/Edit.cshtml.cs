@@ -17,14 +17,17 @@ namespace FcConnect.Pages.Users
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [BindProperty]
         public User User { get; set; } = default!;
+        public string SvgContent { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string id, string click)
         {
@@ -48,6 +51,10 @@ namespace FcConnect.Pages.Users
             {
                 return NotFound();
             }
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "password_reset.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
             User = user;
             return Page();
         }

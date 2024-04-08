@@ -17,15 +17,17 @@ namespace FcConnect.Pages.Messaging
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CreateModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public CreateModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> OnGetAsync()
-        {       
+        {
             // get users for recipient list
             var identityUser = await _userManager.GetUserAsync(User);
             var user = _context.User.Find(identityUser.Id);
@@ -33,12 +35,17 @@ namespace FcConnect.Pages.Messaging
             UserTo = _context.User.ToList();
             UserTo.Remove(user);
 
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "new_message.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
             return Page();
         }
 
         [BindProperty]
         public Message Message { get; set; } = default!;
         public List<User> UserTo { get; set; }
+        public string SvgContent { get; set;}
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()

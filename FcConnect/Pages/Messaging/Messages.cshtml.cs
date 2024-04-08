@@ -41,7 +41,7 @@ namespace FcConnect.Pages.Messaging
             Conversation = await _context.Conversation.Where(c => c.Users.Contains(user) && c.Messages.Any(m => m.Recipient == user)).OrderByDescending(c => c.LastMessageSent)
                 .Include(c => c.Messages).Include(c => c.Users).ToListAsync();
 
-            var svgHeaderFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "messages.svg");
+            var svgHeaderFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "inbox.svg");
             SvgHeaderContent = System.IO.File.ReadAllText(svgHeaderFilePath);
 
             if (Conversation.Count < 1) 

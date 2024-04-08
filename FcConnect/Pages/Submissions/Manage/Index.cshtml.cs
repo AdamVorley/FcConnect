@@ -13,16 +13,19 @@ namespace FcConnect.Pages.Submissions.Manage
     public class IndexModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public IndexModel(FcConnect.Data.ApplicationDbContext context)
+        public IndexModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IList<SurveySubmission> SurveySubmission { get; set; } = default!;
         public string CurrentFilter { get; set; }
         [BindProperty(SupportsGet = true)]
         public bool ReviewedCheckHidden { get; set; }
+        public string SvgContent { get; set; }
 
 
 
@@ -43,6 +46,8 @@ namespace FcConnect.Pages.Submissions.Manage
                 statusSubmissionId = Constants.StatussSubmissionReviewed;
             }
 
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "Submissions.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
             if (!String.IsNullOrEmpty(searchString))
             {

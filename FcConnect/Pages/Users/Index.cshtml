@@ -39,71 +39,74 @@
     </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th class="border-bottom" id="tableHeaderLeft">
-                @Html.DisplayNameFor(model => model.Users[0].Forename)
-            </th>
-            <th class="border-bottom">
-                @Html.DisplayNameFor(model => model.Users[0].Surname)
-            </th>
-            <th class="border-bottom">
-                @Html.DisplayNameFor(model => model.Users[0].Email)
-            </th>
-            <th class="border-bottom">
-                User Role
-            </th>
-            <th class="border-bottom" id="tableHeaderRight"></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Users) {
-            <tr>
-            <td class="align-middle">
-                @if (item.UserStatusId == Constants.StatusUserSuspended)
-                {
-                    <i class="bi bi-person-fill-x text-danger" data-toggle="tooltip" data-bs-placement="bottom" title="User Suspended"></i>
-                }
-                &nbsp;@Html.DisplayFor(modelItem => item.Forename)
-            </td>
-            <td class="align-middle">
-                @Html.DisplayFor(modelItem => item.Surname)
-            </td>
-            <td class="align-middle">
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td class="align-middle">
-                @{
-                    string role;
-                    int roleId = item.RoleId;
-                    switch (roleId)
-                    {
-                        case Constants.RoleUser:
-                            role = "User";
-                            break;
-                        case Constants.RoleAdmin:
-                            role = "Admin";
-                            break;
-                        case Constants.RoleDeveloper:
-                            role = "Developer";
-                            break;
-                        default:
-                            role = "Unknown";
-                            break;
-                    }
-                }
-                @role
 
-            </td>
-            <td>
-                <a class="btn btn-border-primary" asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-pencil"></i>&nbsp;Edit</a> 
-                <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-trash3"></i></a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="border-bottom" id="tableHeaderLeft">
+                        Name
+                    </th>                   
+                    <th class="border-bottom">
+                        @Html.DisplayNameFor(model => model.Users[0].Email)
+                    </th>
+                    <th class="border-bottom">
+                        User Role
+                    </th>
+                    <th class="border-bottom" id="tableHeaderRight"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Users)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @if (item.UserStatusId == Constants.StatusUserSuspended)
+                            {
+                                <i class="bi bi-person-fill-x text-danger" data-toggle="tooltip" data-bs-placement="bottom" title="User Suspended"></i>
+                            }
+                            &nbsp;@Html.DisplayFor(modelItem => item.Forename) @Html.DisplayFor(modelItem => item.Surname)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td class="align-middle">
+                            @{
+                                string role;
+                                int roleId = item.RoleId;
+                                switch (roleId)
+                                {
+                                    case Constants.RoleUser:
+                                        role = "User";
+                                        break;
+                                    case Constants.RoleAdmin:
+                                        role = "Admin";
+                                        break;
+                                    case Constants.RoleDeveloper:
+                                        role = "Developer";
+                                        break;
+                                    default:
+                                        role = "Unknown";
+                                        break;
+                                }
+                            }
+                            @role
+
+                        </td>
+                        <td>
+                            <a class="btn btn-border-primary d-none d-sm-inline" asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-pencil"></i>&nbsp;Edit</a>
+                            <a class="btn btn-border-primary  d-sm-none mb-1" asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-pencil"></i></a>
+                            <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-trash3"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
 
 <script>
 

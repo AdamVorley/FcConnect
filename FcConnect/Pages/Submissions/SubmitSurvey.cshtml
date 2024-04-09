@@ -20,15 +20,6 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <!--    <input type="hidden" asp-for="SurveyUserLink.Id" />
-            <input type="hidden" asp-for="SurveyUserLink.SurveyId" />
-            <input type="hidden" asp-for="SurveyUserLink.DateDue" />
-            <input type="hidden" asp-for="SurveyUserLink.StatusId" />
-
-            <input type="hidden" asp-for="SurveyUserLink.User.Id" />
-            <input type="hidden" asp-for="SurveyUserLink.User.Forename" />
-                <input type="hidden" asp-for="SurveyUserLink.User.Surname" />-->
-
             @{
                 int i = 0;
                 foreach (var question in Model.SurveyQuestions)

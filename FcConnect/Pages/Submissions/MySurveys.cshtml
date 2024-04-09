@@ -56,7 +56,7 @@ else
                         @Model.SurveyNames[surveyNameIndex]
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DateDue)
+                        @item.DateDue.ToString("dd/MM/yyyy")
                     </td>
                     <td>
                         <strong class="text-danger">Outstanding</strong>

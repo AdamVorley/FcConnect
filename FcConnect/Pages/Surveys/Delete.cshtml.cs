@@ -7,20 +7,25 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
+using System.Security.Policy;
 
 namespace FcConnect.Pages.Surveys
 {
     public class DeleteModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public DeleteModel(FcConnect.Data.ApplicationDbContext context)
+        public DeleteModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [BindProperty]
         public Survey Survey { get; set; } = default!;
+        public bool IsEditable { get; set; }
+        public string SvgContent { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id, string? click)
         {
@@ -49,6 +54,14 @@ namespace FcConnect.Pages.Surveys
             {
                 Survey = survey;
             }
+
+            // check if this survey has been assigned to any users
+            var assignedSurveys = await _context.SurveyUserLink.Where(s => s.SurveyId == id).ToListAsync();
+            IsEditable = assignedSurveys.Count == 0;
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "delete.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
             return Page();
         }
 

@@ -5,39 +5,66 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="row g-0 mb-0">
+    <div class="col d-flex align-items-center">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText mt-4 pt-5">Edit <br /> Survey</h5>
+    </div>
+    <div class="col d-flex align-items-end justify-content-end">
+        <a asp-page="./Index" class="btn btn-secondary mb-2"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
+    </div>
+</div>
+<hr class="mt-0" />
 
-<h4>Survey</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Survey.Id" />
-            <div class="form-group"> 
+        @if (Model.IsEditable)
+        {
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Survey.Id" />
+                <div class="form-group">
+                    <label asp-for="Survey.Name" class="control-label"></label>
+                    <input asp-for="Survey.Name" class="form-control mb-2" />
+                    <span asp-validation-for="Survey.Name" class="text-danger"></span>
+                </div>
+                @for (int i = 0; i < Model.Survey.Questions.Count; i++)
+                {
+                    <div class="form-group">
+                        <label asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="control-label">Question @(i + 1)</label>
+                        <input asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="form-control" name="Survey.Questions[@i].QuestionText" />
+                        <input asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" type="hidden" name="Survey.Questions[@i].Id" value="@Model.Survey.Questions.ElementAt(i).Id" />
+                        <span asp-validation-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="text-danger"></span>
+                    </div>
+                }
+                <div class="form-group">
+                    <button type="submit" value="Save" class="btn btn-primary mb-3 mt-3"><i class="bi bi-floppy-fill"></i> Save Changes</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="form-group">
                 <label asp-for="Survey.Name" class="control-label"></label>
-                <input asp-for="Survey.Name" class="form-control" />
+                <input asp-for="Survey.Name" class="form-control mb-2" disabled/>
                 <span asp-validation-for="Survey.Name" class="text-danger"></span>
             </div>
             @for (int i = 0; i < Model.Survey.Questions.Count; i++)
             {
                 <div class="form-group">
-                    <label asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="control-label">Question @(i+1)</label>
-                    <input asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="form-control" name="Survey.Questions[@i].QuestionText" />
+                    <label asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="control-label">Question @(i + 1)</label>
+                    <input asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="form-control" name="Survey.Questions[@i].QuestionText" disabled />
                     <input asp-for="@Model.Survey.Questions.ElementAt(i).QuestionText" type="hidden" name="Survey.Questions[@i].Id" value="@Model.Survey.Questions.ElementAt(i).Id" />
                     <span asp-validation-for="@Model.Survey.Questions.ElementAt(i).QuestionText" class="text-danger"></span>
                 </div>
             }
-            <div class="form-group">
-                <button type="submit" value="Save" class="btn btn-primary mb-3 mt-3"><i class="bi bi-floppy-fill"></i> Save Changes</button>
-            </div>
-        </form>
+            <p>This survey can no longer be edited as it has already been assigned to users.</p>
+            
+        
+        }
+
     </div>
 </div>
-
-<div>
-    <a asp-page="./Index" class="btn btn-secondary"><i class="bi bi-box-arrow-in-left"></i> Back</a>
-</div> 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

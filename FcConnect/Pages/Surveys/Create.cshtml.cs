@@ -16,19 +16,25 @@ namespace FcConnect.Pages.Surveys
     public class CreateModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CreateModel(FcConnect.Data.ApplicationDbContext context)
+        public CreateModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult OnGet()
         {
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "new_survey.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
             return Page();
         }
 
         [BindProperty]
         public Survey Survey { get; set; } = default!;
+        public string SvgContent { get; private set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()

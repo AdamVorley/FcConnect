@@ -16,10 +16,19 @@
 
 </head>
 <body>
+    <style>
+        .multicolored-text {
+            background-image: linear-gradient(to right, #5330f0, #0ceaf2 );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+            font-weight:600;
+        }
+    </style>
     <header>
         <nav class="navbar fixed-top navbar-expand-lg navbar-toggleable-lg navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">FcConnect</a>
+                <a class="navbar-brand quicksandText multicolored-text" asp-area="" asp-page="/Index">FcConnect</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

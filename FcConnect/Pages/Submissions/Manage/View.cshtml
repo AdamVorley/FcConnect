@@ -6,10 +6,19 @@
 }
 
 
-<h4>Survey Submission</h4>
-<p>User: @Model.SurveySubmission.User.Forename @Model.SurveySubmission.User.Surname - @Model.SurveySubmission.User.Email</p>
-<p>Submitted: @Model.SurveySubmission.SubmittedDateTime.ToString("dd/MM/yyyy HH:mm")</p>
-<hr />
+<div class="row g-0 mb-0">
+    <div class="col d-flex align-items-center">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText ps-2 mt-4 pt-5">Review <br /> Submission</h5>
+    </div>
+    <div class="col d-flex align-items-end justify-content-end">
+        <a class="btn btn-secondary mb-2 mt-1" asp-page="./Index"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
+    </div>
+</div>
+<hr class="mt-0" />
+
+<p class="mb-0"><strong>User: </strong>@Model.SurveySubmission.User.Forename @Model.SurveySubmission.User.Surname - @Model.SurveySubmission.User.Email</p>
+<p><strong>Submitted: </strong>@Model.SurveySubmission.SubmittedDateTime.ToString("dd/MM/yyyy HH:mm")</p>
 <div class="row">
     <div class="col-md-4">
         @for (int i = 0; i < Model.SurveyQuestions.Count; i++)
@@ -36,9 +45,6 @@
     </div>
 </div>
 
-<div>
-    <a class="btn btn-secondary mt-1" asp-page="./Index"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

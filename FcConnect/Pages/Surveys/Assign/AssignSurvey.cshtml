@@ -18,21 +18,23 @@
 
 }
 
-<h4>Assign Survey</h4>
+<div class="row g-0 mb-0">
+    <div class="col d-flex align-items-center">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText mt-4 pt-5">Assign <br /> Survey</h5>
+    </div>
+</div>
+<hr class="mt-0" />
 
-<h6>Assigning to user: @username - @email</h6>
-<hr />
+
+<p><strong>Assigning to</strong><br /> @username - @email</p>
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="User.Id" />
             <input type="hidden" asp-for="User.Forename" />
             <input type="hidden" asp-for="User.Surname" />
-            <div>
-                <label class="mb-0"><strong>User</strong></label>
-                <p>@username</p>
-            </div>
            
             <div>
                 <label><strong>Currently Assigned</strong></label>
@@ -40,7 +42,7 @@
             @{
                 if (Model.UserCurrentSurveys.Count < 1)
                 {                    
-                    <p>- No Surveys Assigned -</p>
+                    <p class="text-danger">No Surveys Assigned</p>
                 }
                 if (Model.UserCurrentSurveys != null)
                 {
@@ -57,23 +59,32 @@
                     @Html.DropDownList("surveyDrop", listSurveys, new { @class = "form-control" })
       
                     <div class="mt-3">
-                        <label><strong>First Due Date</strong></label><br />
-                        <input required class="datepicker" type="date" name="dueDatePicker" /><br />
-                        <label><strong>End Date</strong></label><br />
-                        <input required class="datepicker" type="date" name="endDatePicker" />
-                        <label class="mt-3"><strong>Frequency (Days)</strong></label><br />
-                        <input required class="form-control mb-3" type="number" min="1" name="frequencyDays" />
+                        <div class="form-group">
+                            <label asp-for="SurveyUserLink.DateDue" class="control-label">First Due Date</label>
+                            <input asp-for="SurveyUserLink.DateDue" class="form-control" id="StartDate" />
+                            <span asp-validation-for="SurveyUserLink.DateDue" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SurveyUserLink.EndDate" class="control-label">End Date</label>
+                            <input asp-for="SurveyUserLink.EndDate" class="form-control" id="EndDate" />
+                            <span asp-validation-for="SurveyUserLink.EndDate" class="text-danger" id="dateVal"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SurveyUserLink.SurveyFrequency" class="control-label">Frequency (Days)</label>
+                            <input asp-for="SurveyUserLink.SurveyFrequency" class="form-control" />
+                            <span asp-validation-for="SurveyUserLink.SurveyFrequency" class="text-danger"></span>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" value="Assign Survey" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i>&nbsp; Assign Survey</button>
+                        <button type="submit" value="Assign Survey" class="btn btn-primary mt-2"><i class="bi bi-check-circle-fill"></i>&nbsp; Assign Survey</button>
                         
 
                     </div>
                 }
                 else
                 {
-                    <p>-- All surveys have already been assigned to this user --</p>
+                    <p class="text-danger">All surveys have already been assigned to this user</p>
                 }
             </div>
 
@@ -88,3 +99,31 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<!--
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('form').addEventListener('submit', function (e) {
+            debugger;
+            var startDate = new Date(document.querySelector('input[name="SurveyUserLink.DateDue"]').value);
+            var endDate = new Date(document.querySelector('input[name="SurveyUserLink.EndDate"]').value);
+            var endDateErrorSpan = document.getElementById('dateVal');
+
+
+         //   console.log("Start Date Input:", startDate);
+           // console.log("End Date Input:", endDate);
+            //console.log("End Date Error Span:", endDateErrorSpan);
+
+            // Check if end date is less than or equal to start date
+            if (endDate <= startDate) {
+                // Display error message in the existing error span
+                endDateErrorSpan.innerText = "End date must be greater than initial due date";
+                return false;
+             //   e.preventDefault(); // Prevent form submission
+            } else {
+                // Clear any previous error message
+                endDateErrorSpan.innerText = "";
+            }
+        });
+    });
+</script>
+-->

@@ -227,6 +227,22 @@ body {
     border-radius:8px;
 }
 
+.card {
+    background-color: #f9f7f7;
+}
+
 .quicksandText {
     font-family: "Quicksand", sans-serif !important;
+}
+
+.alert-primary {
+    background-color: #144596;
+    border-color: #144596;
+    color: white;
+}
+
+.alert-success {
+    background-color: #39eb9a;
+    border-color: #39eb9a;
+    color: black;
 }

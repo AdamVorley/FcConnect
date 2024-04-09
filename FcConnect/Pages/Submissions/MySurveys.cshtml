@@ -11,65 +11,38 @@
         <h5 class="card-title quicksandText ps-2">My<br />Surveys</h5>
     </div>
 </div>
-<hr class="mt-0" />
+<hr />
 
 @if (Model.SurveyUserLink.Count == 0)
 {
     <div class="container mt-5 pt-5">
-    <div style="text-align:center;" class="d-flex justify-content-center">
-        @Html.Raw(Model.SvgContent)
-    </div>
-    <div class="row">
-        <div class="col d-flex justify-content-center">
-            <p class="quicksandText">
-                You're caught up
-            </p>
+        <div style="text-align:center;" class="d-flex justify-content-center">
+            @Html.Raw(Model.SvgContent)
         </div>
-    </div>
-    </div>
-   <!-- <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-sm-10 col-md-6 col-lg-4">
-                <div style="text-align:center;" class="svg-container">
-                    @Html.Raw(Model.SvgContent)
-                </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <p class="quicksandText">
+                    You're caught up
+                </p>
             </div>
         </div>
-        <div class="row text-center">
-            <div class="col-sm-12">
-                <h1 id="caughtUpText">You're all caught up!</h1>
-            </div>
-        </div>
-    </div>
-    <style>
-        
-        .svg-container {
-            width: 100%;
-            height: auto;   
-        }
-
-           
-            .svg-container svg {
-                width: 100%;
-                height: auto;
-            }
-     </style>-->
+    </div>  
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>
+                <th class="border-bottom" id="tableHeaderLeft">
                     Survey Name
                 </th>
-                <th>
+                <th class="border-bottom">
                     Date Due
                 </th>
-                <th>
+                <th class="border-bottom">
                     Status
                 </th>
-                <th></th>
+                <th class="border-bottom" id="tableHeaderRight"></th>
             </tr>
         </thead>
         <tbody>

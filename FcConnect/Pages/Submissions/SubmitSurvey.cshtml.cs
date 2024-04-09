@@ -14,19 +14,23 @@ namespace FcConnect.Pages.Submissions
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;   
+
         public List<SurveyAnswer> surveyAnswers;
         public SurveySubmission surveySubmission;
         public Survey survey;
         public SurveyUserLink newSurveyUserLink;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [BindProperty]
         public SurveyUserLink SurveyUserLink { get; set; } = default!;
-        public List<SurveyQuestion> SurveyQuestions { get; set; } 
+        public List<SurveyQuestion> SurveyQuestions { get; set; }
+        public string SvgContent { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -44,6 +48,9 @@ namespace FcConnect.Pages.Submissions
             SurveyUserLink = surveyuserlink;
 
             SurveyQuestions = _context.SurveyQuestion.Where(s => s.Survey.Id == SurveyUserLink.SurveyId).ToList();
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "submit_response.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
             return Page();
         }

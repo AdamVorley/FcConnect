@@ -17,15 +17,19 @@ namespace FcConnect.Pages.Surveys
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
 
         }
             
         [BindProperty]
         public Survey Survey { get; set; } = default!;
+        public string SvgContent { get; private set; }
+        public bool IsEditable { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id, string? click)
         {
@@ -51,6 +55,14 @@ namespace FcConnect.Pages.Surveys
                 return NotFound();
             }
             Survey = survey;
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "update.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
+            // check if this survey has been assigned to any users
+            var assignedSurveys = await _context.SurveyUserLink.Where(s => s.SurveyId == id).ToListAsync();
+            IsEditable = assignedSurveys.Count == 0;
+
             return Page();
         }
 

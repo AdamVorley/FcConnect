@@ -16,15 +16,19 @@ namespace FcConnect.Pages.Surveys.Assign
     public class IndexModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public string CurrentFilter { get; set; }
 
 
-        public IndexModel(FcConnect.Data.ApplicationDbContext context)
+        public IndexModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IList<User> User { get;set; } = default!;
+        public string SvgContent { get; set; }
+
 
         public async Task OnGetAsync(string searchString)
         {
@@ -39,6 +43,9 @@ namespace FcConnect.Pages.Surveys.Assign
             {
                 User = await _context.User.Where(u => u.RoleId == Constants.RoleUser).ToListAsync();
             }
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "manage_assignees.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
         }
     }
 }

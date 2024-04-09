@@ -13,15 +13,19 @@ namespace FcConnect.Pages.Surveys.Assign
     public class RemoveSurveyModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public RemoveSurveyModel(FcConnect.Data.ApplicationDbContext context)
+        public RemoveSurveyModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [BindProperty]
         public SurveyUserLink SurveyUserLink { get; set; } = default!;
         public string SurveyName { get; set; }
+        public string SvgContent { get; private set; }
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,7 +34,7 @@ namespace FcConnect.Pages.Surveys.Assign
                 return NotFound();
             }
 
-            var surveyuserlink = await _context.SurveyUserLink.FirstOrDefaultAsync(m => m.Id == id);
+            var surveyuserlink = await _context.SurveyUserLink.Include(m => m.User).FirstOrDefaultAsync(m => m.Id == id);
 
             if (surveyuserlink == null)
             {
@@ -42,6 +46,10 @@ namespace FcConnect.Pages.Surveys.Assign
             }
             var survey = await _context.Survey.FirstOrDefaultAsync(s => s.Id == surveyuserlink.SurveyId);
             SurveyName = survey.Name;
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "remove_surveys.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
             return Page();
         }
 

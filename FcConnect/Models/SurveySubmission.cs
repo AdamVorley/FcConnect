@@ -8,6 +8,8 @@
         public required Survey Survey { get; set; }
         public ICollection<SurveyAnswer> Answers { get; set; } = new List<SurveyAnswer>();
         public int StatusId { get; set; }
+        public DateTime ReviewedDateTime { get; set; }
+        public string? ReviewedByUserId { get; set; }
 
     }
 }

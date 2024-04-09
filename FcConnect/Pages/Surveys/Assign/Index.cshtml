@@ -7,12 +7,20 @@
     HttpContext.Session.SetString("AssignSurveyClick", clickCheck.ToString());
 }
 
-<h4>Assign Surveys</h4>
+<div class="row g-0 mb-0">
+    <div class="col d-flex align-items-end">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText ps-2">Manage <br /> Assignees</h5>
+    </div>
+    <div class="col d-flex align-items-end justify-content-end">
+        <a asp-page="/Surveys/Index" class="btn btn-secondary mb-1" data-toggle="tooltip" data-bs-placement="bottom" title="Back to surveys"><i class="bi bi-arrow-left"></i>&nbsp; Back</a>
+    </div>
+</div>
+<hr class="mt-0" />
 
 <p>
-    Select a user below to assign a survey     
+    Select a user below to assign or remove a survey     
 </p>
-<a asp-page="/Surveys/Index" class="btn btn-secondary mb-3" data-toggle="tooltip" data-bs-placement="bottom" title="Back to surveys"><i class="bi bi-arrow-left"></i></a>
 <form asp-page="./Index" method="get">
         <div class="form-actions no-color">
             <div class="row">
@@ -55,8 +63,8 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a asp-page="./AssignSurvey" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-primary" style="border-radius:25px"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>
-                <a asp-page="./RemoveSurveys" asp-route-id="@item.Id" class="btn btn-danger" style="border-radius:25px"><i class="bi bi-person-x-fill"></i>&nbsp;Remove</a>
+                    <a asp-page="./AssignSurvey" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-border-primary" style="border-radius:25px"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>
+                <a asp-page="./RemoveSurveys" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-person-x-fill"></i>&nbsp;Remove</a>
             </td>
         </tr>
 }

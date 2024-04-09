@@ -8,21 +8,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FcConnect.Pages.Submissions.Manage
 {
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context)
+
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
+
         }
 
         [BindProperty]
         public SurveySubmission SurveySubmission { get; set; } = default!;
         public List<SurveyQuestion> SurveyQuestions { get; set; } = new List<SurveyQuestion>();
+        public string SvgContent { get; private set; }
 
         public async Task<IActionResult> OnGetAsync(int? id, string? click)
         {
@@ -50,6 +58,10 @@ namespace FcConnect.Pages.Submissions.Manage
 
             SurveyQuestions = await _context.SurveyQuestion.Where(s => s.Survey == surveysubmission.Survey).OrderBy(s => s.QuestionId).ToListAsync();
 
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "review_submission.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
+
             return Page();
         }
 
@@ -57,15 +69,12 @@ namespace FcConnect.Pages.Submissions.Manage
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(SurveySubmission surveySubmission)
         {
-         /*   if (!ModelState.IsValid)
-            {
-                return Page();
-            }*/
+            var identityUser = await _userManager.GetUserAsync(User);
 
             _context.SurveySubmission.Attach(surveySubmission);
             _context.Entry(surveySubmission).Property(s => s.StatusId).IsModified = true;
-
-        //    _context.Attach(SurveySubmission).State = EntityState.Modified;
+            surveySubmission.ReviewedDateTime = DateTime.Now;
+            surveySubmission.ReviewedByUserId = identityUser.Id;
 
             try
             {

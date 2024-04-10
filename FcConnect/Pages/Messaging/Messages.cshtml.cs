@@ -29,17 +29,33 @@ namespace FcConnect.Pages.Messaging
         public string userId;
         public string SvgContent { get; private set; }
         public string SvgHeaderContent { get; private set; }
+        public string CurrentFilter { get; set; }
 
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string searchString)
         {
+            CurrentFilter = searchString;
+
             var identityUser = await _userManager.GetUserAsync(User);
             var user = _context.User.Find(identityUser.Id);
 
             userId = user.Id.ToString();
 
-            Conversation = await _context.Conversation.Where(c => c.Users.Contains(user) && c.Messages.Any(m => m.Recipient == user)).OrderByDescending(c => c.LastMessageSent)
+            if (!String.IsNullOrEmpty(searchString))
+            {
+
+                Conversation = await _context.Conversation.Where(c => c.Users.Contains(user) && c.Messages.Any(m => m.Recipient == user) 
+                && c.Messages.Any(m => m.Sender.Forename.Contains(searchString) || m.Sender.Surname.Contains(searchString) || 
+                (m.Sender.Forename + " " + m.Sender.Surname).Contains(searchString))).OrderByDescending(c => c.LastMessageSent)
                 .Include(c => c.Messages).Include(c => c.Users).ToListAsync();
+
+            }
+            else 
+            {
+                Conversation = await _context.Conversation.Where(c => c.Users.Contains(user) && c.Messages.Any(m => m.Recipient == user)).OrderByDescending(c => c.LastMessageSent)
+                .Include(c => c.Messages).Include(c => c.Users).ToListAsync();
+            }
+
 
             var svgHeaderFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "inbox.svg");
             SvgHeaderContent = System.IO.File.ReadAllText(svgHeaderFilePath);

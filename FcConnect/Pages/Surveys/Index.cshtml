@@ -18,7 +18,20 @@
     </div>
 </div>
 <hr />
-
+<form asp-page="./Index" method="get" id="filters">
+    <div class="form-actions no-color">
+        <div class="row mt-2">
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                <div class="input-group">
+                    <input class="form-control" name="SearchString" type="text" placeholder="Search by survey name" id="customTextField" value="@Request.Query["SearchString"]" />
+                    <div class="input-group-append">
+                        <button type="submit" value="Search" class="btn btn-primary" id="customTextFieldButton"><i class="bi bi-search"></i> Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 @if (Model.Survey.Count > 0)
 {    
     <table class="table mt-3">
@@ -50,14 +63,14 @@ else
     <div class="container">
         <div class="row justify-content-center mt-5 pt-5">
             <div class="col-sm-6 col-md-2">
-                <div style="text-align:center;" class="svg-container">
-                    @Html.Raw(Model.SvgHeaderContent)
+                <div style="text-align:center;">
+                    @Html.Raw(Model.SvgContent)
                 </div>
             </div>
         </div>
         <div class="row justify-content-center text-center">
             <div class="col-sm-6 col-md-4">
-                <p> No surveys found</p>
+                <p class="quicksandText"> No surveys found</p>
             </div>
         </div>
     </div>

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using SendGrid.Helpers.Mail;
 using Azure.Core;
+using FcConnect.Utilities;
 
 namespace FcConnect.Pages.Users
 {
@@ -19,13 +20,15 @@ namespace FcConnect.Pages.Users
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly LogEvent _logEvent;
 
 
-        public DeleteModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
+        public DeleteModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, LogEvent logEvent)
         {
             _context = context;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
+            _logEvent = logEvent;
         }
 
         [BindProperty]
@@ -41,6 +44,13 @@ namespace FcConnect.Pages.Users
 
             if (click != HttpContext.Session.GetString("UserEditClick"))
             {
+                // get signed in user info
+                var signedInUserId = HttpContext.Session.GetString("SignedInUserId");
+                string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
+                // audit
+                await _logEvent.LogEvent("Error Forbidden - Delete User", "User Id: " + signedInUserId + " attempted to access delete user page for User Id: " + id +" through improper path.", -1, signedInUserId, userIpAddress);
+
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
 
@@ -99,22 +109,12 @@ namespace FcConnect.Pages.Users
             var identityUser = await _userManager.FindByIdAsync(user.Id);
             await _userManager.DeleteAsync(identityUser);
 
-
+            // get signed in user info
             var signedInUserId = HttpContext.Session.GetString("SignedInUserId");
-            var userIpAddress =  HttpContext.Connection.RemoteIpAddress;
+            string userIpAddress =  HttpContext.Connection.RemoteIpAddress.ToString();
 
-
-            Log logDeletedUser = new()
-            {
-                Name = "User Deleted",
-                Description = "User Id: " + user.Id + " was deleted from the system by User Id: " + signedInUserId,
-                Type = -1,
-                IpAddress = "",
-                SignedInUserId = signedInUserId,
-                TimeStamp = DateTime.Now
-            };
-
-            _context.Log.Add(logDeletedUser);
+            // audit
+            await _logEvent.LogEvent("User Deleted", "User Id: " + user.Id + " was deleted by User Id: " + signedInUserId, -1, signedInUserId, userIpAddress);
 
             await _context.SaveChangesAsync();
 

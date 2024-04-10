@@ -20,9 +20,9 @@
 </div>
 <hr class="mt-0" />
 
-<p><strong>User:</strong> @Model.User.Forename @Model.User.Surname - @Model.User.Email</p>
+<p><strong>User:</strong> @Model.UserModel.Forename @Model.UserModel.Surname - @Model.UserModel.Email</p>
 
-@if (Model.User.UserStatusId == Constants.StatusUserActive)
+@if (Model.UserModel.UserStatusId == Constants.StatusUserActive)
 {
     confirmMessageText = "Are you sure you want to suspend this user?";
     buttonText = "Suspend User";

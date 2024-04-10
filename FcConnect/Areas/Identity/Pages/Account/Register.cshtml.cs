@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using FcConnect.Models;
+using FcConnect.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +35,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly LogEvent _logEvent;
 
 
 
@@ -45,7 +47,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
             RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender,
             FcConnect.Data.ApplicationDbContext context,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment, LogEvent logEvent)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -56,6 +58,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _logEvent = logEvent;
         }
 
         /// <summary>
@@ -160,9 +163,12 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
 
                 if (result.Succeeded)
-                {                  
+                {
+                    string signedInUserId = HttpContext.Session.GetString("SignedInUserId");
+                    string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
-                    _logger.LogInformation("User created a new account with password.");
+                    //audit
+                    await _logEvent.LogEvent("User Created", " A new user was added to the system by User Id: " + signedInUserId + ". The new User Id is: " + user.Id + ".", -1, signedInUserId, userIpAddress);
 
                     await _userManager.AddToRoleAsync(user, userRole);
 
@@ -199,8 +205,6 @@ namespace FcConnect.Areas.Identity.Pages.Account
 
                     }
 
-
-
                     int roleId = Constants.RoleUser;
                     if (userRole == "User") { roleId = Constants.RoleUser; }
                     if (userRole == "Admin") { roleId = Constants.RoleAdmin; }
@@ -219,17 +223,6 @@ namespace FcConnect.Areas.Identity.Pages.Account
                     await _context.User.AddAsync(newUser);
                     await _context.SaveChangesAsync();
 
-
-                    //TODO implement a custom registration success page here - delete below
-                  /*if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                     else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }*/
                 }
 
                 foreach (var error in result.Errors)
@@ -237,7 +230,6 @@ namespace FcConnect.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
                 return RedirectToPage("Success");
-
             }
 
             // If we got this far, something failed, redisplay form

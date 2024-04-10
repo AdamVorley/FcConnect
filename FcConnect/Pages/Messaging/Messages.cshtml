@@ -16,8 +16,21 @@
         <a class="btn btn-secondary" data-toggle="tooltip" data-bs-placement="bottom" title="Refresh messages" asp-page="/"><i class="bi bi-arrow-clockwise"></i></a>
     </div>
 </div>
-
 <hr />
+<form asp-page="./Messages" method="get" id="filters">
+    <div class="form-actions no-color">
+        <div class="row mt-2">
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                <div class="input-group">
+                    <input class="form-control" name="SearchString" type="text" placeholder="Search by name" id="customTextField" value="@Request.Query["SearchString"]" />
+                    <div class="input-group-append">
+                        <button type="submit" value="Search" class="btn btn-primary" id="customTextFieldButton"><i class="bi bi-search"></i> Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 @if (Model.Conversation.Count < 1)
 {
     <div class="container">

@@ -32,7 +32,7 @@ namespace FcConnect.Pages.Messaging
             var identityUser = await _userManager.GetUserAsync(User);
             var user = _context.User.Find(identityUser.Id);
 
-            UserTo = _context.User.ToList();
+            UserTo = await _context.User.Where(u => u.UserStatusId == Constants.StatusUserActive).ToListAsync();
             UserTo.Remove(user);
 
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "new_message.svg");

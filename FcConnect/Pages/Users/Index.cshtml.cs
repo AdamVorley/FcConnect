@@ -43,6 +43,8 @@ namespace FcConnect.Pages.Users
             var identityUser = await _userManager.GetUserAsync(User);
             var signedInUser = _context.User.Find(identityUser.Id);
 
+            HttpContext.Session.SetString("SignedInUserId", signedInUser.Id.ToString());
+
             if (!showSuspendedUsers)
             {
                 userStatusId = Constants.StatusUserActive;

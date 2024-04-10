@@ -8,6 +8,8 @@ public class Constants
 
     public const int StatussSubmissionPendingReview = 10010;
     public const int StatussSubmissionReviewed = 100011;
+    public const int StatussSubmissionDeleted = 100012;
+
 
     public const int StatusUserActive = 10020;
     public const int StatusUserSuspended = 10021;

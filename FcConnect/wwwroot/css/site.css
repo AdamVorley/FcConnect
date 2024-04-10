@@ -231,6 +231,12 @@ body {
     background-color: #f9f7f7;
 }
 
+.card:hover {
+    transform: scale(1.06); 
+    transition: transform 0.3s ease;
+}
+
+
 .quicksandText {
     font-family: "Quicksand", sans-serif !important;
 }
@@ -245,4 +251,8 @@ body {
     background-color: #39eb9a;
     border-color: #39eb9a;
     color: black;
+}
+
+.grey-text {
+    color: #545454;
 }

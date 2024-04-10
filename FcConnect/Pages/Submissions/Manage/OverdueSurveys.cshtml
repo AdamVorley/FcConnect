@@ -1,0 +1,46 @@
+﻿@page
+@model FcConnect.Pages.Submissions.Manage.OverdueSurveysModel
+
+@{
+    ViewData["Title"] = "Overdue Surveys";
+}
+
+<div class="row g-0 mb-2">
+    <div class="col d-flex align-items-center">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText mt-1 pt-5">Overdue <br /> Surveys</h5>
+    </div>
+    <div class="col d-flex justify-content-end align-items-end">
+        <a asp-area="Identity" asp-page="/" class="btn btn-secondary"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
+    </div>
+</div>
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="border-bottom" id="tableHeaderLeft"> 
+                User
+            </th>
+            <th class="border-bottom">
+                @Html.DisplayNameFor(model => model.SurveyUserLink[0].DateDue)
+            </th>        
+            <th class="border-bottom" id="tableHeaderRight"></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.SurveyUserLink) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname) (@Html.DisplayFor(modelItem => item.User.Email))
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateDue)
+            </td>          
+            <td>
+                    <a class="btn btn-border-primary" asp-page="/Messaging/NewMessage" asp-route-id="@item.User.Id" data-toggle="tooltip" data-bs-placement="bottom" title="Send reminder"><i class="bi bi-envelope-arrow-up-fill"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

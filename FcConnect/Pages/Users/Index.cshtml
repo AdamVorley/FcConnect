@@ -7,16 +7,16 @@
     HttpContext.Session.SetString("UserEditClick", clickCheck.ToString());
 }
 
-        <div class="row g-0 mb-2">
-            <div class="col d-flex align-items-center">
-                @Html.Raw(Model.SvgContent)
-                <h5 class="card-title quicksandText mt-1 pt-5">User <br /> Management</h5>
-            </div>  
-            <div class="col d-flex justify-content-end align-items-end">
-                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary mt-1"><i class="bi bi-person-add"></i>&nbsp;Add new user</a>
-            </div>
-      </div>
-      <hr />
+<div class="row g-0 mb-2">
+    <div class="col d-flex align-items-center">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText mt-1 pt-5">User <br /> Management</h5>
+    </div>  
+    <div class="col d-flex justify-content-end align-items-end">
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary mt-1"><i class="bi bi-person-add"></i>&nbsp;Add new user</a>
+    </div>
+</div>
+<hr />
 <form asp-page="./Index" method="get" id="filters">
     <div class="form-actions no-color">
         <div class="row mt-2">

@@ -52,7 +52,7 @@ namespace FcConnect.Pages.Users
                 return NotFound();
             }
 
-            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "password_reset.svg");
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "update_user.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
             User = user;

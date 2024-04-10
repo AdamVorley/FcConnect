@@ -31,6 +31,7 @@ namespace FcConnect.Pages.Submissions.Manage
         public SurveySubmission SurveySubmission { get; set; } = default!;
         public List<SurveyQuestion> SurveyQuestions { get; set; } = new List<SurveyQuestion>();
         public string SvgContent { get; private set; }
+        public string ReviewedByName { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id, string? click)
         {
@@ -61,6 +62,16 @@ namespace FcConnect.Pages.Submissions.Manage
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "review_submission.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
+            if (surveysubmission.StatusId == Constants.StatussSubmissionReviewed)
+            {
+                var userReviewed = await _context.User.FindAsync(surveysubmission.ReviewedByUserId);
+                ReviewedByName = userReviewed.Forename + " " + userReviewed.Surname;
+            }
+            else 
+            {
+                ReviewedByName = "";
+            }
+
 
             return Page();
         }
@@ -75,6 +86,19 @@ namespace FcConnect.Pages.Submissions.Manage
             _context.Entry(surveySubmission).Property(s => s.StatusId).IsModified = true;
             surveySubmission.ReviewedDateTime = DateTime.Now;
             surveySubmission.ReviewedByUserId = identityUser.Id;
+
+            // log the review
+            Log submissionReviewedLog = new()
+            {
+                Name = "Submission Reviewed",
+                Description = "Submission Id: " + surveySubmission.Id + " was reviewed by " + surveySubmission.ReviewedByUserId,
+                Type = -1,
+                IpAddress = "",
+                SignedInUserId = identityUser.Id,
+                TimeStamp = DateTime.Now
+            };
+
+            await _context.Log.AddAsync(submissionReviewedLog);
 
             try
             {

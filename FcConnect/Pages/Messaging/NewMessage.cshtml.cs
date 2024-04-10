@@ -10,6 +10,7 @@ using FcConnect.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FcConnect.Pages.Messaging
 {
@@ -26,15 +27,23 @@ namespace FcConnect.Pages.Messaging
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(string? id)
         {
             // get users for recipient list
-            var identityUser = await _userManager.GetUserAsync(User);
-            var user = _context.User.Find(identityUser.Id);
+            if (!id.IsNullOrEmpty())
+            {
+                UserTo = new List<User>();
+                var userToAdd = await _context.User.FindAsync(id);
+                UserTo.Add(userToAdd);
+            }
+            else 
+            {
+                var identityUser = await _userManager.GetUserAsync(User);
+                var user = await _context.User.FindAsync(identityUser.Id);
 
-            UserTo = await _context.User.Where(u => u.UserStatusId == Constants.StatusUserActive).ToListAsync();
-            UserTo.Remove(user);
-
+                UserTo = await _context.User.Where(u => u.UserStatusId == Constants.StatusUserActive).ToListAsync();
+                UserTo.Remove(user);
+            }
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "new_message.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
 

@@ -7,9 +7,9 @@
 
 
 <div class="row g-0 mb-0">
-    <div class="col d-flex align-items-center">
+    <div class="col d-flex align-items-end">
         @Html.Raw(Model.SvgContent)
-        <h5 class="card-title quicksandText ps-2 mt-4 pt-5">Review <br /> Submission</h5>
+        <h5 class="card-title quicksandText ps-2">Review <br /> Submission</h5>
     </div>
     <div class="col d-flex align-items-end justify-content-end">
         <a class="btn btn-secondary mb-2 mt-1" asp-page="./Index"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
@@ -36,12 +36,14 @@
                 {
                     <button type="submit" value="Save" class="btn btn-success"><i class="bi bi-clipboard-check"></i>&nbsp;Acknowledged</button>
                 }
-                else
-                {
-                    <p style="color:green;"><strong>Survey reviewed&nbsp;<i class="bi bi-check"></i></strong></p>
-                }
             </div>
         </form>
+        @if (Model.SurveySubmission.StatusId == Constants.StatussSubmissionReviewed)
+        {            
+            <p style="color:green;"><strong>Survey reviewed&nbsp;<i class="bi bi-check"></i></strong></p>
+            <p class="mb-0 grey-text">Reviewed on: @Model.SurveySubmission.ReviewedDateTime</p>
+            <p class="grey-text">Reviewed by: @Model.ReviewedByName</p>
+        }
     </div>
 </div>
 

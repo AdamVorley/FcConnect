@@ -26,6 +26,7 @@ namespace FcConnect.Pages.Submissions.Manage
         [BindProperty(SupportsGet = true)]
         public bool ReviewedCheckHidden { get; set; }
         public string SvgContent { get; set; }
+        public string SvgContentNoResults { get; set; }
 
 
 
@@ -49,6 +50,9 @@ namespace FcConnect.Pages.Submissions.Manage
 
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "Submissions.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
+            var svgFileNoResultsPath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "no_results.svg");
+            SvgContentNoResults = System.IO.File.ReadAllText(svgFileNoResultsPath);
 
             if (!String.IsNullOrEmpty(searchString))
             {

@@ -5,7 +5,16 @@
     ViewData["Title"] = "Edit";
 }
 
-<h4>Update User</h4>
+
+<div class="row g-0 mb-2">
+    <div class="col d-flex align-items-end">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText mb-0">Update <br /> User</h5>
+    </div>
+    <div class="col d-flex justify-content-end align-items-end">
+        <a class="btn btn-secondary mt-1" asp-page="./Index"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
+    </div>
+</div>
 <hr />
 <div class="row">
     <div class="col-md-6">
@@ -28,12 +37,12 @@
                 <span asp-validation-for="User.Email" class="text-danger"></span>
             </div>
 
-              <!--  <input hidden asp-for="User.RoleId" class="form-control" />-->
-
             <div class="form-group mt-3">
                 <div class="row">
                     <div class="col">
                         <button type="submit" class="btn btn-primary me-5"><i class="bi bi-floppy"></i>&nbsp; Save</button>
+                    </div>
+                    <div class="col d-flex justify-content-end">
                         @if (Model.User.UserStatusId == Constants.StatusUserActive)
                         {                            
                             <a asp-page="./SuspendUser" asp-route-id="@Model.User.Id" class="btn btn-warning"><i class="bi bi-person-fill-slash"></i>&nbsp;Suspend User</a>
@@ -42,8 +51,6 @@
                         {
                             <a asp-page="./SuspendUser" asp-route-id="@Model.User.Id" class="btn btn-success"><i class="bi bi-person-fill-check"></i>&nbsp;Reinstate User</a>
                         }
-                        <button class="btn btn-danger"><i class="bi bi-trash3-fill"></i>&nbsp;Delete User</button>
-
                     </div>
                 </div>
 
@@ -52,9 +59,6 @@
     </div>
 </div>
 
-<div>
-    <a class="btn btn-secondary mt-1" asp-page="./Index"><i class="bi bi-x-circle-fill"></i>&nbsp;Cancel</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

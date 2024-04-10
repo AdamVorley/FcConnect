@@ -9,20 +9,29 @@
     string buttonIcon = "";
 }
 
-<h4>Suspend User</h4>
+<div class="row g-0 mb-2">
+    <div class="col d-flex align-items-end">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText ps-2">Suspend <br /> User</h5>
+    </div>
+    <div class="col d-flex justify-content-end align-items-end">
+        <a class="btn btn-secondary" asp-page="./Index"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
+    </div>
+</div>
+<hr class="mt-0" />
 
 <p><strong>User:</strong> @Model.User.Forename @Model.User.Surname - @Model.User.Email</p>
 
 @if (Model.User.UserStatusId == Constants.StatusUserActive)
 {
-    confirmMessageText = "Are you sure you wish to suspend this user?";
+    confirmMessageText = "Are you sure you want to suspend this user?";
     buttonText = "Suspend User";
     buttonClass = "btn btn-danger";
     buttonIcon = "<i class=\"bi bi-person-fill-slash\"></i>";
 }
 else
 {    
-    confirmMessageText = "Are you sure you wish to reinstate this user?";
+    confirmMessageText = "Are you sure you want to reinstate this user?";
     buttonText = "Reinstate User";
     buttonClass = "btn btn-success";
     buttonIcon = "<i class=\"bi bi-person-fill-check\"></i>";
@@ -37,7 +46,6 @@ else
                 <button type="submit" class="@buttonClass">@Html.Raw(buttonIcon)&nbsp;@buttonText</button>
             </div>
         </form>
-        <a class="btn btn-secondary mt-2" asp-page="./Index"><i class="bi bi-x-circle-fill"></i>&nbsp;Cancel</a>
     </div>
 </div>
 

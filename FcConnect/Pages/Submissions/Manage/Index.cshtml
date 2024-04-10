@@ -40,53 +40,69 @@
     </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th class="border-bottom" id="tableHeaderLeft">
-                User
-            </th>
-            <th class="border-bottom">
-                Survey Name
-            </th>
-            <th class="border-bottom">
-                Date Submitted
-            </th>
-            <th class="border-bottom" id="tableHeaderRight"></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.SurveySubmission) {
+@if (Model.SurveySubmission.Count == 0)
+{
+    <div class="row mt-5 pt-5">
+        <div class="col d-flex justify-content-center mt-5 pt-5">
+            @Html.Raw(Model.SvgContentNoResults)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <p class="grey-text quicksandText">&nbsp;No new submissions</p>
+        </div>
+    </div>
+}
+else
+    { 
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                @{
-                    if (item.StatusId == Constants.StatussSubmissionPendingReview)
-                    {
-                                <i class="bi bi-exclamation-lg" data-toggle="tooltip" data-bs-placement="bottom" title="Awaiting Review"></i>
-                    }
-                    else
-                    {
-                                <i class="bi bi-check2" data-toggle="tooltip" data-bs-placement="bottom" title="Reviewed"></i>
+                <th class="border-bottom" id="tableHeaderLeft">
+                    User
+                </th>
+                <th class="border-bottom">
+                    Survey Name
+                </th>
+                <th class="border-bottom">
+                    Date Submitted
+                </th>
+                <th class="border-bottom" id="tableHeaderRight"></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.SurveySubmission) {
+                <tr>
+                    <td>
+                    @{
+                        if (item.StatusId == Constants.StatussSubmissionPendingReview)
+                        {
+                                    <i class="bi bi-exclamation-lg text-danger" data-toggle="tooltip" data-bs-placement="bottom" title="Awaiting Review"></i>
+                        }
+                        else
+                        {
+                                    <i class="bi bi-check2 text-success" data-toggle="tooltip" data-bs-placement="bottom" title="Reviewed"></i>
 
                         
-                    }
+                        }
                     }
                 
-                @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname) (@Html.DisplayFor(modelItem => item.User.Email))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Survey.Name)
-            </td>
-            <td>
-                @item.SubmittedDateTime.ToString("dd/MM/yyyy HH:mm")
-            </td>
-            <td>
-                    <a asp-page="./View" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-border-primary"><i class="bi bi-eye-fill"></i> View</a>
-            </td>
-        </tr>
+                    @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname) (@Html.DisplayFor(modelItem => item.User.Email))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Survey.Name)
+                </td>
+                <td>
+                    @item.SubmittedDateTime.ToString("dd/MM/yyyy HH:mm")
+                </td>
+                <td>
+                        <a asp-page="./View" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-border-primary"><i class="bi bi-eye-fill"></i> View</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
 
 <script>
     

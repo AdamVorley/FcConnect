@@ -17,16 +17,18 @@ namespace FcConnect.Pages.Users
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SuspendUserModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager
-)
+        public SuspendUserModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-      //  [BindProperty]
+        //  [BindProperty]
         public User User { get; set; } = default!;
+        public string SvgContent { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
@@ -41,6 +43,10 @@ namespace FcConnect.Pages.Users
                 return NotFound();
             }
             User = user;
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "suspend.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
             return Page();
         }
 

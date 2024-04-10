@@ -32,12 +32,19 @@ namespace FcConnect.Pages.Users
         public User User { get; set; } = default!;
         public string SvgContent { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string id, string click)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
+            if (click != HttpContext.Session.GetString("UserEditClick"))
+            {
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
+
+            HttpContext.Session.Remove("UserEditClick");
 
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "delete_user.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);

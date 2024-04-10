@@ -23,6 +23,7 @@ namespace FcConnect.Pages.Submissions.Manage
 
         public IList<SurveyUserLink> SurveyUserLink { get;set; } = default!;
         public string SvgContent { get; set; }
+        public string SvgContentNoResults { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -30,6 +31,12 @@ namespace FcConnect.Pages.Submissions.Manage
 
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "late.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
+            if (SurveyUserLink.Count == 0) 
+            {
+                var svgNoResultsFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "caught_up.svg");
+                SvgContentNoResults = System.IO.File.ReadAllText(svgNoResultsFilePath);
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace FcConnect.Utilities
             _context = context;
         }
 
-        public async Task LogEvent(string name, string description, int type, string userId, string ipAddress)
+        public async Task Log(string name, string description, int type, string userId, string ipAddress)
         {
             if (userId.IsNullOrEmpty())
             {

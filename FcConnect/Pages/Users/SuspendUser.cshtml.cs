@@ -57,7 +57,7 @@ namespace FcConnect.Pages.Users
             if (id != sessionValue) 
             {
                 string ip = HttpContext.Connection.RemoteIpAddress.ToString();
-                await _logEvent.LogEvent("Error Forbidden - Suspend User", 
+                await _logEvent.Log("Error Forbidden - Suspend User", 
                     "The session value for UserEditing was invalid - the user may have attempted to enter this page via URL injection. Session Value: " + sessionValue + ", Query String value: " + id, -1, signedInUserId, ip);
 
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
@@ -115,7 +115,7 @@ namespace FcConnect.Pages.Users
                     await _userManager.AddClaimAsync(identityUser, new System.Security.Claims.Claim("UserSuspended", "true"));
                 }
                 // audit
-                await _logEvent.LogEvent("User Suspended", "User Id: " + user.Id + " was suspended by User Id: " + signedInUserId, -1, signedInUserId, ip);
+                await _logEvent.Log("User Suspended", "User Id: " + user.Id + " was suspended by User Id: " + signedInUserId, -1, signedInUserId, ip);
             }
             else if (user.UserStatusId == Constants.StatusUserSuspended) 
             {
@@ -123,7 +123,7 @@ namespace FcConnect.Pages.Users
                 await _userManager.ReplaceClaimAsync(identityUser, existingClaim, new Claim("UserSuspended", "false"));
 
                 //audit
-                await _logEvent.LogEvent("User Reinstated", "User Id: " + user.Id + " was reinstated by User Id: " + signedInUserId, -1, signedInUserId, ip);
+                await _logEvent.Log("User Reinstated", "User Id: " + user.Id + " was reinstated by User Id: " + signedInUserId, -1, signedInUserId, ip);
             }
 
             try

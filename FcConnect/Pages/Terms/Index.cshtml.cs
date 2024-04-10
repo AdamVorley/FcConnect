@@ -31,7 +31,7 @@ namespace FcConnect.Areas.Identity.Pages.Terms
             await _userManager.ReplaceClaimAsync(user, existingClaim, new Claim("TermsAccepted", "true"));
 
             // audit user has accepted T&Cs
-            await _logEvent.LogEvent("Terms Accepted by User", "User id: " + user.Id + " accepted the application T&Cs", -1, user.Id, "");           
+            await _logEvent.Log("Terms Accepted by User", "User id: " + user.Id + " accepted the application T&Cs", -1, user.Id, "");           
 
             return RedirectToPage("./TermsAccepted");
         }
@@ -41,7 +41,7 @@ namespace FcConnect.Areas.Identity.Pages.Terms
             var user = await _userManager.GetUserAsync(User);
 
             // audit user has opened T&Cs
-            await _logEvent.LogEvent("Terms Page Opened", "User id: " + user.Id + " viewed the application T&Cs", -1, user.Id, "");
+            await _logEvent.Log("Terms Page Opened", "User id: " + user.Id + " viewed the application T&Cs", -1, user.Id, "");
 
         }
     }

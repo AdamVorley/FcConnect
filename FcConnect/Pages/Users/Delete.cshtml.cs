@@ -49,7 +49,7 @@ namespace FcConnect.Pages.Users
                 string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
                 // audit
-                await _logEvent.LogEvent("Error Forbidden - Delete User", "User Id: " + signedInUserId + " attempted to access delete user page for User Id: " + id +" through improper path.", -1, signedInUserId, userIpAddress);
+                await _logEvent.Log("Error Forbidden - Delete User", "User Id: " + signedInUserId + " attempted to access delete user page for User Id: " + id +" through improper path.", -1, signedInUserId, userIpAddress);
 
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
@@ -114,7 +114,7 @@ namespace FcConnect.Pages.Users
             string userIpAddress =  HttpContext.Connection.RemoteIpAddress.ToString();
 
             // audit
-            await _logEvent.LogEvent("User Deleted", "User Id: " + user.Id + " was deleted by User Id: " + signedInUserId, -1, signedInUserId, userIpAddress);
+            await _logEvent.Log("User Deleted", "User Id: " + user.Id + " was deleted by User Id: " + signedInUserId, -1, signedInUserId, userIpAddress);
 
             await _context.SaveChangesAsync();
 

@@ -168,7 +168,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
                     string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
                     //audit
-                    await _logEvent.LogEvent("User Created", " A new user was added to the system by User Id: " + signedInUserId + ". The new User Id is: " + user.Id + ".", -1, signedInUserId, userIpAddress);
+                    await _logEvent.Log("User Created", " A new user was added to the system by User Id: " + signedInUserId + ". The new User Id is: " + user.Id + ".", -1, signedInUserId, userIpAddress);
 
                     await _userManager.AddToRoleAsync(user, userRole);
 

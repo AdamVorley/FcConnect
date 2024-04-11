@@ -41,7 +41,7 @@
         @if (Model.SurveySubmission.StatusId == Constants.StatussSubmissionReviewed)
         {            
             <p style="color:green;"><strong>Survey reviewed&nbsp;<i class="bi bi-check"></i></strong></p>
-            <p class="mb-0 grey-text">Reviewed on: @Model.SurveySubmission.ReviewedDateTime</p>
+            <p class="mb-0 grey-text">Reviewed on: @Model.SurveySubmission.ReviewedDateTime.ToString("dd/MM/yyyy HH:mm")</p>
             <p class="grey-text">Reviewed by: @Model.ReviewedByName</p>
         }
     </div>

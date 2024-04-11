@@ -51,16 +51,27 @@ else
             }
             @foreach (var item in Model.SurveyUserLink)
             {
-                <tr class="align-content-center">
+                <tr>
                     <td class="align-content-center">
                         @Model.SurveyNames[surveyNameIndex]
                     </td>
-                    <td>
+                    <td class="align-content-center">
                         @item.DateDue.ToString("dd/MM/yyyy")
                     </td>
-                    <td>
-                        <strong class="text-danger">Outstanding</strong>
-                    </td>
+                    <td class="align-content-center">
+                        @if (item.DateDue < DateTime.Now.Date)
+                        {
+                            <strong class="text-danger">Overdue</strong>
+                        }
+                        else if (item.DateDue.Date == DateTime.Now.Date)
+                        {
+                            <strong class="text-danger">Due Today</strong>
+                        }
+                        else
+                        {
+                            <p class="text-success mb-0">Not Due</p>
+                        }
+                    </td class="align-content-center">
                     <td>
                         <a asp-page="./SubmitSurvey" asp-route-id="@item.Id" class="btn btn-primary" style="border-radius:25px;"><i class="bi bi-clipboard2-check-fill"></i> Submit Response</a>
                     </td>

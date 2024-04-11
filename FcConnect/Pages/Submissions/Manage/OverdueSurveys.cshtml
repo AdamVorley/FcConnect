@@ -37,7 +37,7 @@
                     User
                 </th>
                 <th class="border-bottom">
-                    @Html.DisplayNameFor(model => model.SurveyUserLink[0].DateDue)
+                    Date Due
                 </th>
                 <th class="border-bottom" id="tableHeaderRight"></th>
             </tr>
@@ -50,7 +50,7 @@
                         @Html.DisplayFor(modelItem => item.User.Forename) @Html.DisplayFor(modelItem => item.User.Surname) (@Html.DisplayFor(modelItem => item.User.Email))
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DateDue)
+                        @item.DateDue.ToString("dd/MM/yyyy")
                     </td>
                     <td>
                         <a class="btn btn-border-primary" asp-page="/Messaging/NewMessage" asp-route-id="@item.User.Id" data-toggle="tooltip" data-bs-placement="bottom" title="Send reminder"><i class="bi bi-envelope-arrow-up-fill"></i></a>

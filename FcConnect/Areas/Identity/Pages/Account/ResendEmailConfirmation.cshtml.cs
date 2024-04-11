@@ -13,19 +13,24 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FcConnect.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     public class ResendEmailConfirmationModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly FcConnect.Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ResendEmailConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender emailSender)
+        public ResendEmailConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender emailSender, FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         /// <summary>
@@ -50,8 +55,18 @@ namespace FcConnect.Areas.Identity.Pages.Account
             public string Email { get; set; }
         }
 
-        public void OnGet()
+        public string QueryEmail {  get; set; }
+        public string SvgContent { get; set; }  
+
+        public void OnGet(string email)
         {
+            if (!email.IsNullOrEmpty())
+            {
+                QueryEmail = email;
+            }
+
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "resend.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -69,6 +84,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
             }
 
             var userId = await _userManager.GetUserIdAsync(user);
+            var userName = await _context.User.FindAsync(userId);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
@@ -78,8 +94,8 @@ namespace FcConnect.Areas.Identity.Pages.Account
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.Email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "FcConnect Portal - Confirm your email",
+                $"Dear {userName.Forename}, <br /><br />Welcome to the FcConnect portal.<br /><br />To activate your account, please confirm your email address by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.<br /><br />Kind regards,<br /><br />FcConnect");
 
             ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
             return Page();

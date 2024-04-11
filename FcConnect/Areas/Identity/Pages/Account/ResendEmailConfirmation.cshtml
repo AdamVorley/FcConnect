@@ -4,19 +4,34 @@
     ViewData["Title"] = "Resend email confirmation";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2>Enter your email.</h2>
+<div class="row g-0 mb-2">
+    <div class="col d-flex align-items-end">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText mb-0 ps-2">Resend Email<br /> Confirmation</h5>
+    </div>
+    <div class="col d-flex justify-content-end align-items-end">
+        <a class="btn btn-secondary mt-1" asp-page="/Users/Index"><i class="bi bi-arrow-left-short"></i>&nbsp;Back</a>
+    </div>
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="All" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email" class="form-label"></label>
+                @if (!String.IsNullOrEmpty(Model.QueryEmail))
+                {
+                    <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" value="@Model.QueryEmail"/>
+                    <label asp-for="Input.Email" class="form-label"></label>
+                }
+                else
+                {
+                    <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
+                    <label asp-for="Input.Email" class="form-label"></label>
+                }
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-lg btn-primary">Resend</button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i>&nbsp;Send</button>
         </form>
     </div>
 </div>

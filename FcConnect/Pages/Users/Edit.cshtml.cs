@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FcConnect.Pages.Users
 {
@@ -18,16 +19,19 @@ namespace FcConnect.Pages.Users
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         [BindProperty]
         public User User { get; set; } = default!;
         public string SvgContent { get; set; }
+        public bool EmailConfirmed { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string id, string click)
         {
@@ -45,6 +49,9 @@ namespace FcConnect.Pages.Users
 
             // add id of user being edited to session
             HttpContext.Session.SetString("UserEditing", id.ToString());
+
+            var identityUser = await _userManager.FindByIdAsync(id);
+            EmailConfirmed = identityUser.EmailConfirmed;
 
             var user =  await _context.User.FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)

@@ -1,4 +1,5 @@
-﻿using System.Security.Policy;
+﻿using FcConnect.Utilities;
+using System.Security.Policy;
 
 namespace FcConnect.Models
 {
@@ -10,6 +11,6 @@ namespace FcConnect.Models
         public int Type { get; set; }
         public required string IpAddress { get; set; }
         public required string SignedInUserId { get; set; }
-        public DateTime TimeStamp { get; set; } = DateTime.Now;
+        public DateTime TimeStamp { get; set; } = GetDateTime.GetGMT(); // DateTime.Now;
     }
 }

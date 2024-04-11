@@ -11,6 +11,7 @@ using FcConnect.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography.Pkcs;
 using System.ComponentModel.DataAnnotations;
+using FcConnect.Utilities;
 
 namespace FcConnect.Pages.Messaging
 {
@@ -121,7 +122,7 @@ namespace FcConnect.Pages.Messaging
                 MessageContent = NewMessageText,
                 Sender = sender,
                 Recipient = recipient,
-                DateTimeSent = DateTime.Now,
+                DateTimeSent = GetDateTime.GetGMT(),  
                 IsRead = false
             };
 

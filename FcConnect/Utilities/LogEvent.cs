@@ -29,7 +29,7 @@ namespace FcConnect.Utilities
                 Type = type,
                 IpAddress = ipAddress,
                 SignedInUserId = userId,
-                TimeStamp = DateTime.Now
+                TimeStamp = GetDateTime.GetGMT()
             };
 
             await _context.Log.AddAsync(logEvent);

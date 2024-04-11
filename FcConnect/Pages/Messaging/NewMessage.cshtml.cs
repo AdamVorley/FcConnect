@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Microsoft.IdentityModel.Tokens;
+using FcConnect.Utilities;
 
 namespace FcConnect.Pages.Messaging
 {
@@ -76,13 +77,13 @@ namespace FcConnect.Pages.Messaging
 
             Message.Sender = sender;
             Message.Recipient = recipient;
-            Message.DateTimeSent = DateTime.Now;
+            Message.DateTimeSent = GetDateTime.GetGMT();
             Message.IsRead = false;
 
             if (ConversationExists(sender, recipient))
             {
                 var conversation = await _context.Conversation.FirstOrDefaultAsync(c => c.Users.Contains(sender) && c.Users.Contains(recipient));
-                conversation.LastMessageSent = DateTime.Now;
+                conversation.LastMessageSent = GetDateTime.GetGMT();
                 conversation.Messages.Add(Message);
             }
             else 
@@ -99,7 +100,7 @@ namespace FcConnect.Pages.Messaging
                 {
                     Users = users,
                     Messages = messages,
-                    LastMessageSent = DateTime.Now                 
+                    LastMessageSent = GetDateTime.GetGMT()
 
                 };
                 _context.Conversation.Add(conversation);

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
+using FcConnect.Utilities;
 
 namespace FcConnect.Pages.Submissions
 {
@@ -87,7 +88,7 @@ namespace FcConnect.Pages.Submissions
             // Create the submissions
             surveySubmission = new()
             {
-                SubmittedDateTime = DateTime.Now,
+                SubmittedDateTime = GetDateTime.GetGMT(),
                 User = SurveyUserLink.User,
                 Survey = survey,
                 Answers = surveyAnswers,

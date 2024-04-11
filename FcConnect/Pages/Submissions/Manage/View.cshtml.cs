@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Identity;
+using FcConnect.Utilities;
 
 namespace FcConnect.Pages.Submissions.Manage
 {
@@ -84,7 +85,7 @@ namespace FcConnect.Pages.Submissions.Manage
 
             _context.SurveySubmission.Attach(surveySubmission);
             _context.Entry(surveySubmission).Property(s => s.StatusId).IsModified = true;
-            surveySubmission.ReviewedDateTime = DateTime.Now;
+            surveySubmission.ReviewedDateTime = GetDateTime.GetGMT();
             surveySubmission.ReviewedByUserId = identityUser.Id;
 
             // log the review

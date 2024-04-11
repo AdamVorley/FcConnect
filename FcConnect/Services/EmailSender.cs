@@ -1,4 +1,5 @@
 ﻿using FcConnect.Models;
+using FcConnect.Utilities;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using SendGrid;
@@ -9,17 +10,12 @@ namespace FcConnect.Services;
 
 public class EmailSender : IEmailSender
 {
-    private readonly ILogger _logger;
-    private readonly FcConnect.Data.ApplicationDbContext _context;
+    private readonly LogEvent _logEvent;
 
-
-
-    public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
-                       ILogger<EmailSender> logger, FcConnect.Data.ApplicationDbContext context)
+    public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor, LogEvent logEvent)
     {
         Options = optionsAccessor.Value;
-        _logger = logger;
-        _context = context;
+        _logEvent = logEvent;
     }
 
     public AuthMessageSenderOptions Options { get; } //Set with Secret Manager.
@@ -45,27 +41,12 @@ public class EmailSender : IEmailSender
         };
         msg.AddTo(new EmailAddress(toEmail));
 
-        // Disable click tracking.
-        // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
         msg.SetClickTracking(false, false);
         var response = await client.SendEmailAsync(msg);
 
-        Log resultLog = new()
-        {
-            Description = response.IsSuccessStatusCode
+        await _logEvent.Log("Email Send result", response.IsSuccessStatusCode
                                ? $"Email to {toEmail} queued successfully!"
-                               : $"Failure Email to {toEmail}",
-            Name = "Email Send result",
-            Type = -1,
-            IpAddress = "",
-            SignedInUserId = ""
-        };
-        _context.Log.Add(resultLog);
-        await _context.SaveChangesAsync();
-        
+                               : $"Failure Email to {toEmail}", -1, "", "");
 
-        _logger.LogInformation(response.IsSuccessStatusCode
-                               ? $"Email to {toEmail} queued successfully!"
-                               : $"Failure Email to {toEmail}");
     }
 }

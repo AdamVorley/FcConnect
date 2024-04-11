@@ -11,9 +11,11 @@ using FcConnect.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using FcConnect.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Users
 {
+    [Authorize(Roles = "Admin")]
     public class SuspendUserModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;

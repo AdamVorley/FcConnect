@@ -23,6 +23,9 @@
         @Html.Raw(Model.SvgContent)
         <h5 class="card-title quicksandText mt-4 pt-5">Assign <br /> Survey</h5>
     </div>
+    <div class="col d-flex justify-content-end align-items-end">
+        <a class="btn btn-secondary mb-1" asp-page="./Index"><i class="bi bi-x-circle-fill"></i>&nbsp; Cancel</a>
+    </div>
 </div>
 <hr class="mt-0" />
 
@@ -92,38 +95,6 @@
     </div>
 </div>
 
-<div>
-    <a class="btn btn-secondary" asp-page="./Index"><i class="bi bi-x-circle-fill"></i>&nbsp; Cancel</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-<!--
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('form').addEventListener('submit', function (e) {
-            debugger;
-            var startDate = new Date(document.querySelector('input[name="SurveyUserLink.DateDue"]').value);
-            var endDate = new Date(document.querySelector('input[name="SurveyUserLink.EndDate"]').value);
-            var endDateErrorSpan = document.getElementById('dateVal');
-
-
-         //   console.log("Start Date Input:", startDate);
-           // console.log("End Date Input:", endDate);
-            //console.log("End Date Error Span:", endDateErrorSpan);
-
-            // Check if end date is less than or equal to start date
-            if (endDate <= startDate) {
-                // Display error message in the existing error span
-                endDateErrorSpan.innerText = "End date must be greater than initial due date";
-                return false;
-             //   e.preventDefault(); // Prevent form submission
-            } else {
-                // Clear any previous error message
-                endDateErrorSpan.innerText = "";
-            }
-        });
-    });
-</script>
--->

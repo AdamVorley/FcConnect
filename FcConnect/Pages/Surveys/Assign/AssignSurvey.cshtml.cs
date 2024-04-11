@@ -14,7 +14,6 @@ using System.ComponentModel.DataAnnotations;
 namespace FcConnect.Pages.Surveys.Assign
 {
     [Authorize(Roles = "Admin")]
-
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
@@ -87,8 +86,6 @@ namespace FcConnect.Pages.Surveys.Assign
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(string id)
         {
             if (!ModelState.IsValid)

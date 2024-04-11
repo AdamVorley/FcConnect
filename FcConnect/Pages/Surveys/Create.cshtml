@@ -28,7 +28,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Survey.Name" class="control-label mt-3"></label>
-                <input id="nameField" asp-for="Survey.Name" class="form-control mb-3" placeholder="Enter a name for the survey" autocomplete="off" autofocus />
+                <input id="nameField" asp-for="Survey.Name" class="form-control mb-3" maxlength="250" placeholder="Enter a name for the survey" autocomplete="off" autofocus />
                 <span asp-validation-for="Survey.Name" class="text-danger"></span>
             </div>            
             <div class="form-group" id="questionsContainer">
@@ -69,14 +69,6 @@
 
     });
 
-   /* // disable submit button when form submitted to prevent duplicate entries
-    document.getElementById('questionsForm').addEventListener('submit', function (event) {
-        var submitButton = document.getElementById("submit");
-
-        if (questionFieldsCount > 0) {
-            submitButton.disabled = true;
-        }
-    });*/
 
         // add question field button click
     document.getElementById('addQuestionField').addEventListener('click', function () {
@@ -95,6 +87,7 @@
         questionField.placeholder = "Question " + (questionFieldsCount + 1);
         questionField.required = true;
         questionField.autocomplete = "off";
+        questionField.maxLength = "1000";
         
 
         // Append the new field to a container div or directly to the form

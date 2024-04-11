@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using System.Security.Policy;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Surveys
 {
+    [Authorize(Roles = "Admin")]
+
     public class DeleteModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;

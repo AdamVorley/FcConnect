@@ -20,7 +20,8 @@ public class Constants
     public const int RoleAdmin = 20002;
     public const int RoleDeveloper = 20003;
 
-    public const int SurveyFrequencyDays = 14;
-
     public const int SurveyMaxQuestions = 50;
+
+    public const int TextFieldCharLimit = 1000;
 }
+

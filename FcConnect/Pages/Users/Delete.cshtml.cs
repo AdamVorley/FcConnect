@@ -12,16 +12,18 @@ using Microsoft.AspNetCore.Hosting;
 using SendGrid.Helpers.Mail;
 using Azure.Core;
 using FcConnect.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Users
 {
+    [Authorize(Roles = "Admin")]
+
     public class DeleteModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly LogEvent _logEvent;
-
 
         public DeleteModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, LogEvent logEvent)
         {

@@ -18,22 +18,22 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label asp-for="User.Email" class="control-label"></label>
-            <input disabled asp-for="User.Email" class="form-control" />
-            <span asp-validation-for="User.Email" class="text-danger"></span>
+            <label asp-for="EditUser.Email" class="control-label"></label>
+            <input disabled asp-for="EditUser.Email" class="form-control" />
+            <span asp-validation-for="EditUser.Email" class="text-danger"></span>
         </div>
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="User.Id" />
+            <input type="hidden" asp-for="EditUser.Id" />
             <div class="form-group">
-                <label asp-for="User.Forename" class="control-label"></label>
-                <input asp-for="User.Forename" class="form-control" />
-                <span asp-validation-for="User.Forename" class="text-danger"></span>
+                <label asp-for="EditUser.Forename" class="control-label"></label>
+                <input asp-for="EditUser.Forename" class="form-control" />
+                <span asp-validation-for="EditUser.Forename" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.Surname" class="control-label"></label>
-                <input asp-for="User.Surname" class="form-control" />
-                <span asp-validation-for="User.Surname" class="text-danger"></span>
+                <label asp-for="EditUser.Surname" class="control-label"></label>
+                <input asp-for="EditUser.Surname" class="form-control" />
+                <span asp-validation-for="EditUser.Surname" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <div class="row">
@@ -45,18 +45,18 @@
         </form>
         <div class="row">
             <div class="col mt-2">
-                @if (Model.User.UserStatusId == Constants.StatusUserActive)
+                @if (Model.EditUser.UserStatusId == Constants.StatusUserActive)
                 {
-                    <a asp-page="./SuspendUser" asp-route-id="@Model.User.Id" class="btn btn-warning"><i class="bi bi-person-fill-slash"></i>&nbsp;Suspend User</a>
+                    <a asp-page="./SuspendUser" asp-route-id="@Model.EditUser.Id" class="btn btn-warning"><i class="bi bi-person-fill-slash"></i>&nbsp;Suspend User</a>
                 }
-                @if (Model.User.UserStatusId == Constants.StatusUserSuspended)
+                @if (Model.EditUser.UserStatusId == Constants.StatusUserSuspended)
                 {
-                    <a asp-page="./SuspendUser" asp-route-id="@Model.User.Id" class="btn btn-success"><i class="bi bi-person-fill-check"></i>&nbsp;Reinstate User</a>
+                    <a asp-page="./SuspendUser" asp-route-id="@Model.EditUser.Id" class="btn btn-success"><i class="bi bi-person-fill-check"></i>&nbsp;Reinstate User</a>
                 }
                 <!--Show resend confirmation button if account not confirmed-->
                 @if (!Model.EmailConfirmed)
                 {
-                    <a asp-area="Identity" asp-page="/Account/ResendEmailConfirmation" asp-route-email="@Model.User.Email" class="btn btn-secondary"><i class="bi bi-envelope-at-fill"></i>&nbsp;Resend Confirmation</a>
+                    <a asp-area="Identity" asp-page="/Account/ResendEmailConfirmation" asp-route-email="@Model.EditUser.Email" class="btn btn-secondary"><i class="bi bi-envelope-at-fill"></i>&nbsp;Resend Confirmation</a>
                 }
 
             </div>

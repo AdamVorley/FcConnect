@@ -10,6 +10,7 @@ using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FcConnect.Utilities;
 
 namespace FcConnect.Pages.Users
 {
@@ -20,16 +21,18 @@ namespace FcConnect.Pages.Users
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly LogEvent _logEvent;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, LogEvent logEvent)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
+            _logEvent = logEvent;
         }
 
         [BindProperty]
-        public User User { get; set; } = default!;
+        public User EditUser { get; set; } = default!;
         public string SvgContent { get; set; }
         public bool EmailConfirmed { get; set; }
 
@@ -62,13 +65,12 @@ namespace FcConnect.Pages.Users
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "update_user.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
-            User = user;
+            EditUser = user;
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(User user)
+
+        public async Task<IActionResult> OnPostAsync(User edituser)
         {
             if (!ModelState.IsValid)
             {
@@ -78,15 +80,20 @@ namespace FcConnect.Pages.Users
             // check id returned from form against session
             string sessionValue = HttpContext.Session.GetString("UserEditing");
 
-            if (user.Id.ToString() != sessionValue) 
+            var signedInUser = await _userManager.GetUserAsync(User);
+            string userId = "Unknown";
+            if (signedInUser != null) { userId = signedInUser.Id; }
+
+            if (edituser.Id.ToString() != sessionValue) 
             {
+                await _logEvent.Log("Session value mismatch - edit user", "The session value " + sessionValue + 
+                    " did not match the user being edited " + edituser.Id + ". The id may have been manipulated by the user", -1, userId, "");
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
 
-            _context.User.Attach(user);
-            _context.Entry(user).Property(u => u.Forename).IsModified = true;
-            _context.Entry(user).Property(u => u.Surname).IsModified = true;
-            _context.Entry(user).Property(u => u.Email).IsModified = true;
+            _context.User.Attach(edituser);
+            _context.Entry(edituser).Property(u => u.Forename).IsModified = true;
+            _context.Entry(edituser).Property(u => u.Surname).IsModified = true;
             _context.SaveChanges();
 
             try
@@ -95,7 +102,7 @@ namespace FcConnect.Pages.Users
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(User.Id))
+                if (!UserExists(EditUser.Id))
                 {
                     return NotFound();
                 }

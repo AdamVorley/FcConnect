@@ -67,7 +67,6 @@ namespace FcConnect.Pages.Users
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "users.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);
 
-            //Users = await _context.User.Where(u => u != signedInUser).ToListAsync();
         }
     }
 }

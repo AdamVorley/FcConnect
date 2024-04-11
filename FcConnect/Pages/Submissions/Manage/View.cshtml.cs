@@ -18,14 +18,14 @@ namespace FcConnect.Pages.Submissions.Manage
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly LogEvent _logEvent;
 
-
-        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, LogEvent logEvent)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
-
+            _logEvent = logEvent;
         }
 
         [BindProperty]
@@ -46,6 +46,13 @@ namespace FcConnect.Pages.Submissions.Manage
 
             if (click != clickGuid) 
             {
+                string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+                var identityUser = await _userManager.GetUserAsync(User);
+                string userId = "Unknown";
+                if (identityUser != null) { userId = identityUser.Id; }
+
+                // Log that user tried to access submission via url rather than button click
+                await _logEvent.Log("Unauthrorised access attempt - view submission", "Click GUID was invalid", -1, userId, userIpAddress);
                 return new StatusCodeResult(403);
             }
 
@@ -77,8 +84,6 @@ namespace FcConnect.Pages.Submissions.Manage
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(SurveySubmission surveySubmission)
         {
             var identityUser = await _userManager.GetUserAsync(User);
@@ -89,17 +94,7 @@ namespace FcConnect.Pages.Submissions.Manage
             surveySubmission.ReviewedByUserId = identityUser.Id;
 
             // log the review
-            Log submissionReviewedLog = new()
-            {
-                Name = "Submission Reviewed",
-                Description = "Submission Id: " + surveySubmission.Id + " was reviewed by " + surveySubmission.ReviewedByUserId,
-                Type = -1,
-                IpAddress = "",
-                SignedInUserId = identityUser.Id,
-                TimeStamp = DateTime.Now
-            };
-
-            await _context.Log.AddAsync(submissionReviewedLog);
+            await _logEvent.Log("Submission Reviewed", "Submission Id: " + surveySubmission.Id + " was reviewed by " + surveySubmission.ReviewedByUserId, -1, identityUser.Id, "");           
 
             try
             {

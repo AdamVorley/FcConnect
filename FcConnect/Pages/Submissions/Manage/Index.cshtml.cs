@@ -28,9 +28,6 @@ namespace FcConnect.Pages.Submissions.Manage
         public string SvgContent { get; set; }
         public string SvgContentNoResults { get; set; }
 
-
-
-
         public async Task OnGetAsync(string searchString)
         {
             CurrentFilter = searchString;
@@ -62,7 +59,6 @@ namespace FcConnect.Pages.Submissions.Manage
             }
             else
             {
-
                 SurveySubmission = await _context.SurveySubmission.Where(s => s.StatusId <= statusSubmissionId).Include(s => s.User).Include(s => s.Survey).OrderByDescending(s => s.SubmittedDateTime).ToListAsync();
             }
 

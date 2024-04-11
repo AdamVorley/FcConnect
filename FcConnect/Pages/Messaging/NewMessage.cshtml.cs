@@ -57,7 +57,6 @@ namespace FcConnect.Pages.Messaging
         public string SvgContent { get; set;}
 
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -106,7 +105,6 @@ namespace FcConnect.Pages.Messaging
                 _context.Conversation.Add(conversation);
             }
             
-           // _context.Message.Add(Message);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Messages");

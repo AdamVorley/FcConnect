@@ -19,11 +19,13 @@ namespace FcConnect.Pages.Messaging
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly LogEvent _logEvent;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, LogEvent logEvent)
         {
             _context = context;
             _userManager = userManager;
+            _logEvent = logEvent;
         }
 
         [BindProperty]
@@ -44,6 +46,8 @@ namespace FcConnect.Pages.Messaging
 
             var identityUser = await _userManager.GetUserAsync(User);
             var signedInUser = _context.User.Find(identityUser.Id);
+            string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
 
             userId = user;
 
@@ -52,6 +56,7 @@ namespace FcConnect.Pages.Messaging
             if (!conversation.Users.Contains(signedInUser)) 
             {
                 // if user is trying to access a conversation they are not in
+                await _logEvent.Log("Unauthorised message access attempt", "User " + signedInUser.Id + " attempted to access conversation Id " + conversation.Id + ".", -1, signedInUser.Id, userIpAddress);
                 return new StatusCodeResult(403);
             }
 
@@ -75,32 +80,30 @@ namespace FcConnect.Pages.Messaging
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+            var identityUser = await _userManager.GetUserAsync(User);
+            var signedInUser = _context.User.Find(identityUser.Id);
+            string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
             if (Conversation.Id.ToString() != HttpContext.Session.GetString("ConversationId"))
             {
+                await _logEvent.Log("Unauthorised message send attempt", 
+                    "User " + signedInUser.Id + " attempted to access conversation Id " + Conversation.Id + " through url injection.", -1, signedInUser.Id, userIpAddress);
+
                 return new StatusCodeResult(400);
-                // TODO - log
             }
 
             var conversation = await _context.Conversation.Include(c => c.Messages).Include(c => c.Users).FirstOrDefaultAsync(c => c.Id == Conversation.Id);
 
             if (conversation == null) 
             {
-                // 500
                 return new StatusCodeResult(500); 
             }
-
-
-            var identityUser = await _userManager.GetUserAsync(User);
-
 
             User sender = await _context.User.FirstOrDefaultAsync(u => u.Id == identityUser.Id);
             User recipient = null;
@@ -128,8 +131,6 @@ namespace FcConnect.Pages.Messaging
 
             conversation.Messages.Add(newMessage);
 
-           // _context.Attach(Conversation).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -145,9 +146,8 @@ namespace FcConnect.Pages.Messaging
                     throw;
                 }
             }
-            //return RedirectToPage("/Edit", new { id = conversation.Id }); 
 
-            //  return RedirectToPage("./Messages");
+            // return to refresh page and render message
             return new JsonResult(new { success = true });
 
         }

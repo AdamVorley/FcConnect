@@ -9,30 +9,37 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using FcConnect.Utilities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Submissions
 {
+    [Authorize(Roles = "User")]
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;   
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly LogEvent _logEvent;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public List<SurveyAnswer> surveyAnswers;
         public SurveySubmission surveySubmission;
         public Survey survey;
         public SurveyUserLink newSurveyUserLink;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, LogEvent logEvent, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _logEvent = logEvent;
+            _userManager = userManager;
+            
         }
 
         [BindProperty]
         public SurveyUserLink SurveyUserLink { get; set; } = default!;
         public List<SurveyQuestion> SurveyQuestions { get; set; }
         public string SvgContent { get; set; }
-
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -41,11 +48,21 @@ namespace FcConnect.Pages.Submissions
                 return NotFound();
             }
 
+            var signedInUser = await _userManager.GetUserAsync(User);
+            string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
             var surveyuserlink =  await _context.SurveyUserLink.Include(s => s.User).FirstOrDefaultAsync(m => m.Id == id);
             if (surveyuserlink == null)
             {
                 return NotFound();
             }
+
+            if (surveyuserlink.User.Id != signedInUser.Id) 
+            {
+                await _logEvent.Log("Unauthorised survey access attempt", "User " + signedInUser.Id +
+                    " attempted to access a survey assigned to user " + surveyuserlink.User.Id, -1, signedInUser.Id, userIpAddress);
+            }
+
             SurveyUserLink = surveyuserlink;
 
             SurveyQuestions = _context.SurveyQuestion.Where(s => s.Survey.Id == SurveyUserLink.SurveyId).ToList();
@@ -56,8 +73,6 @@ namespace FcConnect.Pages.Submissions
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             SurveyUserLink = await _context.SurveyUserLink.Include(s => s.User).FirstOrDefaultAsync(m => m.Id == id);
@@ -73,6 +88,15 @@ namespace FcConnect.Pages.Submissions
             for (int i = 0; i < answerCount; i++) 
             {
                 string answerText = Request.Form["answerText" + i];
+                if (answerText.Length > Constants.TextFieldCharLimit) 
+                {
+
+                    var signedInUser = await _userManager.GetUserAsync(User);
+                    string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
+                    await _logEvent.Log("Char limit exceeded", "User attempted to submit data above the char limit.", -1, signedInUser.Id, userIpAddress);
+
+                }
                 if (answerText != null) 
                 {
                     SurveyAnswer surveyAnswer = new()
@@ -120,11 +144,6 @@ namespace FcConnect.Pages.Submissions
             }
 
             _context.Attach(SurveyUserLink).State = EntityState.Modified;
-
-       /*     if (!ModelState.IsValid)
-            {
-                return Page();
-            }*/
 
             try
             {

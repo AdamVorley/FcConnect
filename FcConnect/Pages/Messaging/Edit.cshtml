@@ -106,8 +106,9 @@
                 var maxScrollYOffset = document.documentElement.scrollHeight - window.innerHeight;
                 var currentScrollOffset = window.scrollY;
                 // check user isn't typing
-                var inputText = $('#messageTextField').val();
-
+                //var inputText = $('#messageTextField').val();
+                var inputText = document.getElementById('customTextField').value;
+                debugger;
                 if (inputText === null || inputText.length === 0) {
                     
                     if (maxScrollYOffset - currentScrollOffset > 400) {                        
@@ -127,8 +128,8 @@
 
 
 
-            // Refresh every 60 seconds
-            setInterval(refreshPage, 60000);
+            // Refresh every 30 seconds
+            setInterval(refreshPage, 30000);
         });
     </script>
 }

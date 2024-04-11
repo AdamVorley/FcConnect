@@ -81,7 +81,7 @@ namespace FcConnect.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "FcConnect - Reset Password",
-                    $"Dear {userForename}, <br /><br> />A passowrd reset request has been made for your FcConnect account." +
+                    $"Dear {userForename}, <br /><br>A password reset request has been made for your FcConnect account." +
                     $"<br /><br />Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.<br /><br />" +
                     $"Kind regards,<br /><br />FcConnect");
 

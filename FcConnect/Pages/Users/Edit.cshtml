@@ -5,7 +5,6 @@
     ViewData["Title"] = "Update User";
 }
 
-
 <div class="row g-0 mb-2">
     <div class="col d-flex align-items-end">
         @Html.Raw(Model.SvgContent)
@@ -18,6 +17,11 @@
 <hr />
 <div class="row">
     <div class="col-md-6">
+        <div class="form-group">
+            <label asp-for="User.Email" class="control-label"></label>
+            <input disabled asp-for="User.Email" class="form-control" />
+            <span asp-validation-for="User.Email" class="text-danger"></span>
+        </div>
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="User.Id" />
@@ -31,12 +35,6 @@
                 <input asp-for="User.Surname" class="form-control" />
                 <span asp-validation-for="User.Surname" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="User.Email" class="control-label"></label>
-                <input asp-for="User.Email" class="form-control" />
-                <span asp-validation-for="User.Email" class="text-danger"></span>
-            </div>
-
             <div class="form-group mt-3">
                 <div class="row">
                     <div class="col">

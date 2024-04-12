@@ -102,8 +102,10 @@
                     <td class="text-truncate" style="max-width:150px;">
                         @Html.DisplayFor(modelItem => item.Messages.ElementAt(index).MessageContent)
                     </td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-border-primary"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
+                    <td>                      
+                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-border-primary d-none d-sm-inline-block"><i class="bi bi-eye-fill"></i> &nbsp;View</a>
+                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-user="@Model.userId" class="btn btn-border-primary d-sm-none"><i class="bi bi-eye-fill"></i></a>
+
                     </td>
                 </tr>
             }

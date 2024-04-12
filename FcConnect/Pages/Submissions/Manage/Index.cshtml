@@ -89,10 +89,15 @@ else
                     @Html.DisplayFor(modelItem => item.Survey.Name)
                 </td>
                 <td>
-                    @item.SubmittedDateTime.ToString("dd/MM/yyyy HH:mm")
+                    @item.SubmittedDateTime.ToString("dd/MM/yyyy")
                 </td>
                 <td>
-                        <a asp-page="./View" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-border-primary"><i class="bi bi-eye-fill"></i> View</a>
+
+                   <!--     <a class="btn btn-border-primary d-none d-sm-inline" asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-pencil"></i>&nbsp;Edit</a>
+                             <a class="btn btn-border-primary  d-sm-none mb-1" asp-page="./Edit" asp-route-id="@item.Id" asp-route-click="@clickCheck"><i class="bi bi-pencil"></i></a>-->
+                        <a asp-page="./View" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-border-primary d-none d-sm-inline-block"><i class="bi bi-eye-fill"></i>&nbsp;View</a>
+                        <a asp-page="./View" asp-route-id="@item.Id" asp-route-click="@clickCheck" class="btn btn-border-primary d-sm-none"><i class="bi bi-eye-fill"></i></a>
+
                 </td>
             </tr>
     }

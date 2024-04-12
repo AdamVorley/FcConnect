@@ -14,7 +14,7 @@ If running the application locally, you will need to obtain a SendGrid API key f
 2. Generate an API key in your SendGrid account dashboard.
 3. Follow the instructions provided in the Quickstart guide on the SendGrid site. This will involve setting your API key through the User Secret manager. Refer to .NET documentation here https://learn.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-8.0&tabs=visual-studio for further information.
 
-##Usage
+## Usage
 Run the application using dotnet run.
 Access the application through your web browser at http://localhost:{port}.
 Refer to the User Guide for information on the application's features and functionality.

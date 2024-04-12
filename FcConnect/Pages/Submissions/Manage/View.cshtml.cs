@@ -43,17 +43,17 @@ namespace FcConnect.Pages.Submissions.Manage
             {
                 return NotFound();
             }
+            var identityUser = await _userManager.GetUserAsync(User);
+            string userId = "Unknown";
+            if (identityUser != null) { userId = identityUser.Id; }
+            string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
 
             // check user has accessed page via button click
             string clickGuid = HttpContext.Session.GetString("EditClick");
 
             if (click != clickGuid) 
             {
-                string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-                var identityUser = await _userManager.GetUserAsync(User);
-                string userId = "Unknown";
-                if (identityUser != null) { userId = identityUser.Id; }
-
                 // Log that user tried to access submission via url rather than button click
                 await _logEvent.Log("Unauthrorised access attempt - view submission", "Click GUID was invalid", -1, userId, userIpAddress);
                 return new StatusCodeResult(403);
@@ -62,10 +62,19 @@ namespace FcConnect.Pages.Submissions.Manage
             HttpContext.Session.Remove("EditClick");
 
             var surveysubmission =  await _context.SurveySubmission.Include(s => s.User).Include(s => s.Survey).Include(s => s.Answers).FirstOrDefaultAsync(m => m.Id == id);
+
             if (surveysubmission == null)
             {
                 return NotFound();
             }
+
+            if (surveysubmission.ReviewerId != identityUser.Id) 
+            {
+                // user attempting to view submission is not authorised 
+                await _logEvent.Log("Unauthrorised access attempt - view submission", "Signed in user Id did not match the Survey Assignee Id", -1, userId, userIpAddress);
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
+
             SurveySubmission = surveysubmission;
 
             SurveyQuestions = await _context.SurveyQuestion.Where(s => s.Survey == surveysubmission.Survey).OrderBy(s => s.QuestionId).ToListAsync();

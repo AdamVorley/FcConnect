@@ -10,6 +10,7 @@
         public int StatusId { get; set; }
         public DateTime ReviewedDateTime { get; set; }
         public string? ReviewedByUserId { get; set; }
+        public string? ReviewerId { get; set; }
 
     }
 }

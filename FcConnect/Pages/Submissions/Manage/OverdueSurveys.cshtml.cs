@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FcConnect.Pages.Submissions.Manage
 {
@@ -17,11 +18,13 @@ namespace FcConnect.Pages.Submissions.Manage
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public OverdueSurveysModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public OverdueSurveysModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         public IList<SurveyUserLink> SurveyUserLink { get;set; } = default!;
@@ -30,7 +33,9 @@ namespace FcConnect.Pages.Submissions.Manage
 
         public async Task OnGetAsync()
         {
-            SurveyUserLink = await _context.SurveyUserLink.Include(s => s.User).Where(s => s.StatusId == Constants.StatusSurveyOutstanding && s.DateDue.Date < DateTime.Now.Date).OrderBy(s => s.DateDue).ToListAsync();
+            var signedInUser = await _userManager.GetUserAsync(User);
+
+            SurveyUserLink = await _context.SurveyUserLink.Include(s => s.User).Where(s => s.StatusId == Constants.StatusSurveyOutstanding && s.DateDue.Date < DateTime.Now.Date && s.AssignedByUserId == signedInUser.Id).OrderBy(s => s.DateDue).ToListAsync();
 
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "late.svg");
             SvgContent = System.IO.File.ReadAllText(svgFilePath);

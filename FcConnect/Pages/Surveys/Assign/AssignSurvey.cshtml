@@ -13,8 +13,8 @@
         }
     }
 
-    var username = Model.User.Forename + " " + Model.User.Surname;
-    var email = Model.User.Email;
+    var username = Model.AssigningToUser.Forename + " " + Model.AssigningToUser.Surname;
+    var email = Model.AssigningToUser.Email;
 
 }
 
@@ -35,9 +35,9 @@
     <div class="col-md-4">
         <form method="post" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="User.Id" />
-            <input type="hidden" asp-for="User.Forename" />
-            <input type="hidden" asp-for="User.Surname" />
+            <input type="hidden" asp-for="AssigningToUser.Id" />
+            <input type="hidden" asp-for="AssigningToUser.Forename" />
+            <input type="hidden" asp-for="AssigningToUser.Surname" />
            
             <div>
                 <label><strong>Currently Assigned</strong></label>

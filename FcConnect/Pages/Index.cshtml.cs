@@ -51,8 +51,8 @@ namespace FcConnect.Pages
             UserName = user.Forename;
 
             UnreadMessages = await _context.Message.Where(m => m.Recipient.Id == signedInUser.Id).Where(m => m.IsRead == false).ToListAsync();
-            Submissions = await _context.SurveySubmission.Where(s => s.StatusId == Constants.StatussSubmissionPendingReview).ToListAsync();
-            Overdue = await _context.SurveyUserLink.Where(s => s.DateDue < DateTime.Now.Date && s.StatusId == Constants.StatusSurveyOutstanding).ToListAsync();
+            Submissions = await _context.SurveySubmission.Where(s => s.StatusId == Constants.StatussSubmissionPendingReview && s.ReviewerId == signedInUser.Id).ToListAsync();
+            Overdue = await _context.SurveyUserLink.Where(s => s.DateDue < DateTime.Now.Date && s.StatusId == Constants.StatusSurveyOutstanding && s.AssignedByUserId == signedInUser.Id).ToListAsync();
             Reviewed = await _context.SurveySubmission.Where(s => s.ReviewedDateTime.Date == DateTime.Now.Date && s.ReviewedByUserId == signedInUser.Id).ToListAsync();
 
             NewMessages = UnreadMessages.Count;

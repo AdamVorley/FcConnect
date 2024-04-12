@@ -10,6 +10,7 @@ using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace FcConnect.Pages.Surveys.Assign
 {
@@ -18,15 +19,17 @@ namespace FcConnect.Pages.Surveys.Assign
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public EditModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         [BindProperty]
-        public User User { get; set; } = default!;
+        public User AssigningToUser { get; set; } = default!;
         [BindProperty]
         public List<Survey> UserCurrentSurveys { get; set; }
         [BindProperty]
@@ -79,7 +82,7 @@ namespace FcConnect.Pages.Surveys.Assign
             {
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
-            User = user;
+            AssigningToUser = user;
 
             BuildDropdowns(id, user);
 
@@ -96,11 +99,14 @@ namespace FcConnect.Pages.Surveys.Assign
                 {
                     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
                 }
-                User = user_;
+                AssigningToUser = user_;
                 BuildDropdowns(id, user_);
 
                 return Page();
             }
+
+            var signedInIdentityUser = await _userManager.GetUserAsync(User);
+            User signedInUser = await _context.User.FindAsync(signedInIdentityUser.Id);
 
             TimeSpan time = new TimeSpan(17, 00, 0);
             int surveyAssigningId;  
@@ -122,6 +128,7 @@ namespace FcConnect.Pages.Surveys.Assign
             surveyToAssign.DateDue = surveyToAssign.DateDue + time; // set time to 5pm
             surveyToAssign.EndDate = surveyToAssign.EndDate + time;
             surveyToAssign.SurveyId = surveyAssigningId;
+            surveyToAssign.AssignedByUserId = signedInIdentityUser.Id;
 
             _context.Add(surveyToAssign);
 
@@ -131,7 +138,7 @@ namespace FcConnect.Pages.Surveys.Assign
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(User.Id))
+                if (!UserExists(AssigningToUser.Id))
                 {
                     return NotFound();
                 }

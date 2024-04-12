@@ -36,12 +36,12 @@ namespace FcConnect.Pages.Surveys.Assign
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                User = await _context.User.Where(u => u.RoleId == Constants.RoleUser).Where(u => u.Surname.Contains(searchString) || u.Forename.Contains(searchString) ||
+                User = await _context.User.Where(u => u.RoleId == Constants.RoleUser && u.UserStatusId == Constants.StatusUserActive).Where(u => u.Surname.Contains(searchString) || u.Forename.Contains(searchString) ||
                 (u.Forename + " " + u.Surname).Contains(searchString)).ToListAsync();
             }
             else 
             {
-                User = await _context.User.Where(u => u.RoleId == Constants.RoleUser).ToListAsync();
+                User = await _context.User.Where(u => u.RoleId == Constants.RoleUser && u.UserStatusId == Constants.StatusUserActive).ToListAsync();
             }
 
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "manage_assignees.svg");

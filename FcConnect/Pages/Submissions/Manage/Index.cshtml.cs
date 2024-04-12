@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FcConnect.Pages.Submissions.Manage
 {
@@ -16,11 +17,12 @@ namespace FcConnect.Pages.Submissions.Manage
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public IndexModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        private readonly UserManager<IdentityUser> _userManager;
+        public IndexModel(FcConnect.Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         public IList<SurveySubmission> SurveySubmission { get; set; } = default!;
@@ -33,6 +35,8 @@ namespace FcConnect.Pages.Submissions.Manage
         public async Task OnGetAsync(string searchString)
         {
             CurrentFilter = searchString;
+
+            var signedInIdentityUser = await _userManager.GetUserAsync(User);
 
             // Retrieve the value of the checkbox
             bool showReviewedSubmissions = ReviewedCheckHidden;
@@ -55,13 +59,14 @@ namespace FcConnect.Pages.Submissions.Manage
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                SurveySubmission = await _context.SurveySubmission.Include(s => s.User).Include(s => s.Survey).OrderByDescending(s => s.SubmittedDateTime)
+                SurveySubmission = await _context.SurveySubmission.Include(s => s.User).Include(s => s.Survey).Where(s => s.ReviewerId == signedInIdentityUser.Id).OrderByDescending(s => s.SubmittedDateTime)
                 .Where(s => s.User.Surname.Contains(searchString) || s.User.Forename.Contains(searchString) ||
                 (s.User.Forename + " " + s.User.Surname).Contains(searchString)).Where(s => s.StatusId <= statusSubmissionId).ToListAsync();
             }
             else
             {
-                SurveySubmission = await _context.SurveySubmission.Where(s => s.StatusId <= statusSubmissionId).Include(s => s.User).Include(s => s.Survey).OrderByDescending(s => s.SubmittedDateTime).ToListAsync();
+                SurveySubmission = await _context.SurveySubmission.Where(s => s.StatusId <= statusSubmissionId).Include(s => s.User).Include(s => s.Survey)
+                    .Where(s => s.ReviewerId == signedInIdentityUser.Id).OrderByDescending(s => s.SubmittedDateTime).ToListAsync();
             }
 
         }

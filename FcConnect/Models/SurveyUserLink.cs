@@ -18,6 +18,8 @@ namespace FcConnect.Models
         public int SurveyFrequency { get; set; }
         [ValidateNever]
         public required User User { get; set; }
+        [ValidateNever]
+        public required string AssignedByUserId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

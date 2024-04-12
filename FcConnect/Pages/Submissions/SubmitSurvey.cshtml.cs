@@ -116,7 +116,8 @@ namespace FcConnect.Pages.Submissions
                 User = SurveyUserLink.User,
                 Survey = survey,
                 Answers = surveyAnswers,
-                StatusId = Constants.StatussSubmissionPendingReview
+                StatusId = Constants.StatussSubmissionPendingReview,
+                ReviewerId = SurveyUserLink.AssignedByUserId
             };
 
             _context.SurveySubmission.Add(surveySubmission);
@@ -137,7 +138,8 @@ namespace FcConnect.Pages.Submissions
                     EndDate = SurveyUserLink.EndDate,
                     StatusId = Constants.StatusSurveyOutstanding,
                     SurveyFrequency = SurveyUserLink.SurveyFrequency,
-                    User = SurveyUserLink.User
+                    User = SurveyUserLink.User,
+                    AssignedByUserId = SurveyUserLink.AssignedByUserId
                 };
 
                 _context.SurveyUserLink.Add(newSurveyUserLink);

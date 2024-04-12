@@ -10,9 +10,12 @@ using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Identity;
 using FcConnect.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Submissions.Manage
 {
+    [Authorize(Roles = "Admin")]
+
     public class EditModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;

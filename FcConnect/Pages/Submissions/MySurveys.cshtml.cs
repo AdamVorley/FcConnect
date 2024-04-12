@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using FcConnect.Data;
 using FcConnect.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FcConnect.Pages.Submissions
 {
+    [Authorize(Roles = "User")]
+
     public class IndexModel : PageModel
     {
         private readonly FcConnect.Data.ApplicationDbContext _context;

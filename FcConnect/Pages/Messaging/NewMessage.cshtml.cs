@@ -42,7 +42,15 @@ namespace FcConnect.Pages.Messaging
                 var identityUser = await _userManager.GetUserAsync(User);
                 var user = await _context.User.FindAsync(identityUser.Id);
 
-                UserTo = await _context.User.Where(u => u.UserStatusId == Constants.StatusUserActive).ToListAsync();
+                // ensure regular users can't message other regular users
+                if (user.RoleId == Constants.RoleUser)
+                {
+                    UserTo = await _context.User.Where(u => u.UserStatusId == Constants.StatusUserActive && u.RoleId == Constants.RoleAdmin).ToListAsync();
+                }
+                else 
+                {
+                    UserTo = await _context.User.Where(u => u.UserStatusId == Constants.StatusUserActive).ToListAsync();
+                }
                 UserTo.Remove(user);
             }
             var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "new_message.svg");

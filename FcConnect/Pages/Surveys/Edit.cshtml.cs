@@ -70,10 +70,10 @@ namespace FcConnect.Pages.Surveys
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            //tryUpdate
 
             // get the original Survey instance again
             Survey survey = await _context.Survey.Include(s => s.Questions).FirstOrDefaultAsync(m => m.Id == id);
+            survey.Name = Survey.Name;
 
             // loop through the questions entered on the page
             // Survey -> new text entered on page

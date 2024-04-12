@@ -1,0 +1,19 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Confirm email";
+}
+
+<div class="row g-0 mb-2">
+    <div class="col d-flex align-items-end">
+        @Html.Raw(Model.SvgContent)
+        <h5 class="card-title quicksandText mb-0 ps-2">Confirm<br /> Email</h5>
+    </div>
+</div>
+<hr />
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="col d-flex justify-content-center">
+    <a class="btn btn-primary mt-1" asp-area="Identity" asp-page="/Account/Login"><i class="bi bi-box-arrow-in-left"></i>&nbsp;Back to login</a>
+</div>

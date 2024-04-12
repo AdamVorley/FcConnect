@@ -76,6 +76,9 @@ namespace FcConnect.Areas.Identity.Pages.Account
                 return Page();
             }
 
+            var svgFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Assets", "resend.svg");
+            SvgContent = System.IO.File.ReadAllText(svgFilePath);
+
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {

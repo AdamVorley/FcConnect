@@ -9,7 +9,7 @@
     {
         foreach (var user in Model.UserTo)
         {
-            listUsers.Add(new SelectListItem { Text = user.Forename.ToString() + " " + user.Surname.ToString(), Value = user.Id.ToString() });
+            listUsers.Add(new SelectListItem { Text = user.Forename.ToString() + " " + user.Surname.ToString() + " - " + user.Email.ToString(), Value = user.Id.ToString() });
         }
     }
 }

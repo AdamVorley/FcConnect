@@ -106,20 +106,6 @@ body {
     color: purple;
 }
 
-#addQuestionField {
-    border-radius: 25px;
-    
-    background-color: #28a745;
-    color: white;
-    cursor: pointer;
-}
-
-#addQuestionField:hover {
-    border-radius: 50px;
-    background-color: #ceedd8;
-    cursor: pointer;
-    color:white;
-   }
 
 #removeQuestionField {
     border-radius: 25px;

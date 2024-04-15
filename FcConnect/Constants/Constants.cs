@@ -23,5 +23,9 @@ public class Constants
     public const int SurveyMaxQuestions = 50;
 
     public const int TextFieldCharLimit = 1000;
+
+    public const int MaxPasswordRetries = 5;
+    public const int LockoutTimeMins = 5;
+
 }
 

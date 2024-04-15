@@ -18,6 +18,14 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.Configure<IdentityOptions>(options => 
+{
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(Constants.MaxPasswordRetries);
+    options.Lockout.MaxFailedAccessAttempts = Constants.LockoutTimeMins;
+    options.Lockout.AllowedForNewUsers = true;
+});
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();

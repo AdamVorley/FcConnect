@@ -125,7 +125,6 @@ namespace FcConnect.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    await _logEvent.Log("New sign in", "User " + Input.Email + " signed in", -1, "", "");
 
                     // check if user has accepted terms
                    if (User.HasClaim(c => c.Type == "TermsAccepted" && c.Value == "false")) 
@@ -141,9 +140,11 @@ namespace FcConnect.Areas.Identity.Pages.Account
                         await _logEvent.Log("Attempted sign in - suspended user", "User " + Input.Email + " attempted to sign in", -1, "", "");
 
                         await _signInManager.SignOutAsync();
-                        ModelState.AddModelError(string.Empty, "Account suspended.");
-                        return Page(); 
+                        return LocalRedirect("/Error/Suspended");
                     }
+
+                    await _logEvent.Log("New sign in", "User " + Input.Email + " signed in", -1, "", "");
+
 
                     return LocalRedirect(returnUrl);
                 }

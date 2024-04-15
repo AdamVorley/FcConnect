@@ -1,0 +1,16 @@
+﻿@page
+@model FcConnect.Pages.Error.SuspendedModel
+@{
+}
+<div class="container">
+    <div class="row g-0 mb-0 mt-5 pt-5">
+        <div class="col-12 d-flex justify-content-center mt-5 pt-5">
+            @Html.Raw(Model.SvgContent)
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <h5 class="card-title quicksandText">Account Suspended</h5>
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <p class="quicksandText text-center">Your account has been suspended - please contact your administrator</p>
+        </div>
+    </div>

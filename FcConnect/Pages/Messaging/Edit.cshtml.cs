@@ -71,8 +71,6 @@ namespace FcConnect.Pages.Messaging
                 {
                     conversation.Messages.ElementAt(i).IsRead = true;
                 }
-
-
             }
 
             _context.SaveChanges();

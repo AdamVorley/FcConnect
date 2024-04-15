@@ -155,6 +155,10 @@ namespace FcConnect.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
+                    string userIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
+                    await _logEvent.Log("Failed sign in - account locked", "User " + Input.Email + " reached password retry limit and their account was locked", -1, "", userIpAddress);
+
                     return RedirectToPage("./Lockout");
                 }
                 else

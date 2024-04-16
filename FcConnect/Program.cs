@@ -123,6 +123,36 @@ using (var scope = app.Services.CreateScope())
         await context.User.AddAsync(newUser);
         await context.SaveChangesAsync();
     }
+
+    string userEmail = "test@user.com";
+    string userPassword = "Regre55i0n#";
+
+    if (await userManager.FindByEmailAsync(userEmail) == null)
+    {
+        var userU = new IdentityUser();
+        userU.UserName = userEmail;
+        userU.Email = userEmail;
+        userU.EmailConfirmed = true;
+
+        await userManager.CreateAsync(userU, userPassword);
+        await userManager.AddToRoleAsync(userU, "User");
+
+        var createdUserU = await userManager.FindByEmailAsync(userEmail);
+
+        User newUser = new()
+        {
+            Id = createdUserU.Id,
+            Email = createdUserU.Email,
+            Forename = "Test",
+            Surname = "User",
+            RoleId = Constants.RoleUser,
+            UserStatusId = Constants.StatusUserActive
+        };
+
+        await userManager.AddClaimAsync(createdUserU, new System.Security.Claims.Claim("TermsAccepted", "true"));
+        await context.User.AddAsync(newUser);
+        await context.SaveChangesAsync();
+    }
 }
 
 app.Run();

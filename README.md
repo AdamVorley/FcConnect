@@ -18,8 +18,17 @@ If running the application locally, you will need to obtain a SendGrid API key f
 2. Generate an API key in your SendGrid account dashboard.
 3. Follow the instructions provided in the Quickstart guide on the SendGrid site. This will involve setting your API key through the User Secret manager. Refer to .NET documentation here https://learn.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-8.0&tabs=visual-studio for further information.
 4. The 'from' email address also needs to be updated to the verified email address on your SendGrid account for the email functionality to work. This can be found on line 37 of the EmailSender.cs class.
-##Usage
+
+## Database
+1. Create an empty database in SQL Server Management Studio, named 'FcConnect'
+2. From Visual Studio, navigate to Tools -> Package Manager Console and run the following commands:
+`Add-Migration initialMigration`
+`Update-Database`
+This will add all the required tables to the database using the classes in the 'Models' folder. For further information, refer to Entity Framework Core documentation.
+
+## Usage
 Run the application using dotnet run.
 Access the application through your web browser at http://localhost:{port}.
-Refer to the User Guide for information on the application's features and functionality.
+Refer to the User Guide for information on the application's features and functionality, including test user credentials which come pre-seeded into the database.
+
 

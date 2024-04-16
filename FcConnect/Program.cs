@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using FcConnect.Utilities;
+using FcConnect.Models;
+using FcConnect.Migrations;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -90,6 +92,7 @@ using (var scope = app.Services.CreateScope())
     }
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
     string email = "test@admin.com";
     string password = "Regre55i0n#";
@@ -99,9 +102,26 @@ using (var scope = app.Services.CreateScope())
         var user = new IdentityUser();
         user.UserName = email;
         user.Email = email;
+        user.EmailConfirmed = true;
 
         await userManager.CreateAsync(user, password);
         await userManager.AddToRoleAsync(user, "Admin");
+
+        var createdUser = await userManager.FindByEmailAsync(email);
+
+        User newUser = new()
+        {
+            Id = createdUser.Id,
+            Email = createdUser.Email,
+            Forename = "Test",
+            Surname = "Admin",
+            RoleId = Constants.RoleAdmin,
+            UserStatusId = Constants.StatusUserActive
+        };
+
+        await userManager.AddClaimAsync(createdUser, new System.Security.Claims.Claim("TermsAccepted", "true"));
+        await context.User.AddAsync(newUser);
+        await context.SaveChangesAsync();
     }
 }
 
